@@ -13,8 +13,7 @@ export default function Header() {
                 </Link>
                 <nav className="flex items-center gap-6">
                     <Link href="/explore" className="font-semibold hover:text-accent-lightblue transition-colors">Explore</Link>
-                    <Link href="/portal" className="font-semibold hover:text-accent-lightblue transition-colors">Our Portal</Link>
-                    <Link href="/student-portal" className="font-semibold hover:text-accent-lightblue transition-colors">Student Portal</Link>
+                    <Link href="/student-portal/login" className="font-semibold hover:text-accent-lightblue transition-colors">Student Portal</Link>
                     <Link
                         href="/enroll"
                         className="ml-2 px-5 py-2 rounded-full bg-gradient-to-r from-accent-lightblue via-primary-white to-accent-lightblue text-primary-blue font-bold shadow-lg border-2 border-accent-lightblue animate-pulse hover:bg-accent-navy hover:text-primary-white hover:from-accent-navy hover:to-accent-navy transition-all duration-200"

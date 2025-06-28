@@ -1,0 +1,137 @@
+// Firebase Database Schema
+
+{
+  "users": {
+    "$userId": {
+      "basic_info": {
+        "fullName": "string",
+        "email": "string",
+        "phone": "string",
+        "dateOfBirth": "timestamp",
+        "gender": "string",
+        "address": {
+          "street": "string",
+          "city": "string",
+          "state": "string",
+          "country": "string",
+          "postalCode": "string"
+        },
+        "profilePicture": "string",  // Storage URL
+        "joinDate": "timestamp",
+        "userType": "string"  // student, instructor, admin
+      },
+      "education": {
+        "previousEducation": [{
+          "instituteName": "string",
+          "degree": "string",
+          "grade": "string",
+          "yearCompleted": "number"
+        }]
+      },
+      "guardian_info": {  // For students only
+        "name": "string",
+        "relationship": "string",
+        "phone": "string",
+        "email": "string",
+        "occupation": "string"
+      }
+    }
+  },
+  
+  "courses": {
+    "$courseId": {
+      "basic_info": {
+        "name": "string",
+        "description": "string",
+        "category": "string",  // Maps to main categories (Foundation, Middle School, etc.)
+        "subCategory": "string",  // Maps to subcategories if applicable
+        "level": "string",  // For programs with levels
+        "duration": "number",
+        "fee": "number",
+        "startDate": "timestamp",
+        "endDate": "timestamp",
+        "maxStudents": "number",
+        "status": "string"  // active, upcoming, archived
+      },
+      "curriculum": {
+        "modules": [{
+          "title": "string",
+          "description": "string",
+          "order": "number",
+          "content": [{
+            "title": "string",
+            "type": "string",  // video, document, quiz, assignment
+            "contentUrl": "string",
+            "duration": "number"
+          }]
+        }]
+      },
+      "instructors": {
+        "$instructorId": {
+          "role": "string",  // primary, assistant
+          "assignedDate": "timestamp"
+        }
+      }
+    }
+  },
+
+  "enrollments": {
+    "$enrollmentId": {
+      "studentId": "string",
+      "courseId": "string",
+      "enrollmentDate": "timestamp",
+      "status": "string",  // pending, active, completed, dropped
+      "progress": "number",  // Percentage
+      "lastAccessDate": "timestamp",
+      "paymentStatus": "string",
+      "completionCertificate": "string"  // Storage URL
+    }
+  },
+
+  "admissions": {
+    "$admissionId": {
+      "studentInfo": {
+        "fullName": "string",
+        "dateOfBirth": "timestamp",
+        "gender": "string",
+        "email": "string",
+        "phone": "string",
+        "address": {
+          "street": "string",
+          "city": "string",
+          "state": "string",
+          "country": "string",
+          "postalCode": "string"
+        }
+      },
+      "guardianInfo": {
+        "name": "string",
+        "relationship": "string",
+        "phone": "string",
+        "email": "string",
+        "occupation": "string"
+      },
+      "educationalBackground": [{
+        "instituteName": "string",
+        "degree": "string",
+        "grade": "string",
+        "yearCompleted": "number"
+      }],
+      "courseSelection": {
+        "programType": "string",  // Maps to main categories
+        "specificCourse": "string",
+        "preferredBatch": "string"
+      },
+      "documents": {
+        "previousCertificates": ["string"],  // Storage URLs
+        "identityProof": "string",  // Storage URL
+        "photograph": "string"  // Storage URL
+      },
+      "applicationStatus": "string",  // pending, approved, rejected
+      "applicationDate": "timestamp",
+      "lastUpdated": "timestamp",
+      "reviewedBy": "string",  // admin userId
+      "comments": "string"
+    }
+  }
+}

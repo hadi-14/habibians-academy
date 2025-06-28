@@ -54,7 +54,7 @@ export default function Home() {
                     Habibian&apos;s Academy
                   </h1>
                   <blockquote className="text-lg md:text-xl italic text-accent-navy border-l-4 border-accent-lightblue pl-4 animate-fade-in delay-200">
-                    &quot;Empowering students to create, explore, and achieve their dreams.&quot;
+                    &quot;Empowering student-portals to create, explore, and achieve their dreams.&quot;
                   </blockquote>
                   <a href="/enroll" className="mt-4 inline-block px-8 py-3 rounded-full bg-accent-lightblue text-primary-blue font-heading font-bold text-lg shadow-lg hover:bg-accent-navy hover:text-primary-white transition-colors animate-fade-in delay-300">
                     Enroll Now
@@ -84,7 +84,7 @@ export default function Home() {
           <div className="w-full bg-accent-navy text-primary-white rounded-b-2xl shadow-lg flex flex-col sm:flex-row justify-around items-center py-6 px-4 gap-6 animate-fade-in">
             <div className="flex flex-col items-center animate-bounce-slow">
               <AnimatedCounter target={1000} duration={1200} className="text-2xl md:text-3xl font-heading font-bold" suffix="+" />
-              <span className="text-sm md:text-base opacity-80">Students</span>
+              <span className="text-sm md:text-base opacity-80">student-portals</span>
             </div>
             <span className="hidden sm:inline-block w-px h-8 bg-primary-white opacity-30"></span>
             <div className="flex flex-col items-center animate-bounce-slow delay-100">
@@ -126,7 +126,7 @@ export default function Home() {
             <div className="flex-1 flex flex-col items-start gap-3 border-r border-primary-silver pr-8 last:border-none">
               <h3 className="text-xl md:text-2xl font-heading font-bold text-primary-blue underline underline-offset-4 decoration-accent-lightblue mb-2">Our Mission</h3>
               <p className="text-base md:text-lg font-body text-primary-blue/80 leading-snug">
-                To inspire and empower every student to reach their full potential through creativity, critical thinking, and lifelong learning.
+                To inspire and empower every student-portal to reach their full potential through creativity, critical thinking, and lifelong learning.
               </p>
             </div>
             <div className="flex-1 flex flex-col items-start gap-3 border-r border-primary-silver pr-8 last:border-none">
@@ -151,7 +151,7 @@ export default function Home() {
               <h3 className="text-2xl md:text-3xl font-heading font-bold text-primary-blue mb-2">Message from the Founder</h3>
               <p className="text-base md:text-lg font-body text-primary-blue/80 mb-4">
                 &quot;At Habibians Academy, our mission is to nurture not just academic excellence, but also character, creativity, and confidence.
-                Every student is unique, and we strive to provide an environment where each one can discover their strengths and achieve their dreams.
+                Every student-portal is unique, and we strive to provide an environment where each one can discover their strengths and achieve their dreams.
                 Thank you for being part of our journey.&quot;
               </p>
               <div className="mt-2 font-heading font-bold text-accent-navy">- Sir Abdul Samad, Founder & Principal</div>
@@ -204,7 +204,7 @@ export default function Home() {
               </div>
             </div>
             <div className="flex-none flex items-center justify-center min-w-[180px] md:ml-12 mt-8 md:mt-0">
-              <Image src="/student-placeholder.avif" alt="Student" width={180} height={220} className="object-cover rounded-2xl shadow-lg border-4 border-accent-lightblue bg-primary-silver" priority />
+              <Image src="/student-placeholder.avif" alt="student-portal" width={180} height={220} className="object-cover rounded-2xl shadow-lg border-4 border-accent-lightblue bg-primary-silver" priority />
             </div>
           </div>
 
@@ -414,7 +414,7 @@ function TestimonialsSection() {
     {
       name: 'Bilal Khan',
       img: '/student-placeholder.avif',
-      text: 'The interactive classes and free trial made it easy to choose Habibians. Highly recommended for Commerce students!',
+      text: 'The interactive classes and free trial made it easy to choose Habibians. Highly recommended for Commerce student-portals!',
       group: 'Commerce',
     },
     {
@@ -480,9 +480,9 @@ function TestimonialsSection() {
       <svg className="absolute bottom-0 right-0 w-1/3 h-1/3 opacity-10 pointer-events-none" viewBox="0 0 200 200" fill="none">
         <rect x="20" y="20" width="160" height="160" rx="60" fill="#6366F1" />
       </svg>
-      
-      <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary-blue text-center mb-12 drop-shadow-lg tracking-tight z-10 animate-bounce">What Our Students Say</h2>
-      
+
+      <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary-blue text-center mb-12 drop-shadow-lg tracking-tight z-10 animate-bounce">What Our student-portals Say</h2>
+
       <div className="relative w-full max-w-5xl mx-auto">
         {/* Left Arrow */}
         <button
@@ -511,7 +511,7 @@ function TestimonialsSection() {
             const isCenter = offset === 0;
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const isSide = Math.abs(offset) === 1;
-            
+
             // Opacity: center 1, side 0.8
             const opacity = isCenter ? 1 : 0.8;
             // zIndex: center 10, side 8
@@ -534,27 +534,27 @@ function TestimonialsSection() {
                 <div className={`relative bg-white/90 rounded-2xl shadow-xl p-8 border-2 ${isCenter ? 'border-blue-400' : 'border-blue-200'} flex flex-col items-center gap-6 group hover:shadow-2xl hover:border-blue-400 transition-all duration-500 w-80 h-96`}>
                   {/* Decorative quote mark */}
                   <span className="absolute -top-4 left-4 text-5xl text-blue-300/60 font-serif select-none z-0">&quot;</span>
-                  
+
                   {/* Center highlight effect */}
                   {isCenter && <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-indigo-50/50 pointer-events-none rounded-2xl" />}
-                  
+
                   <div className="flex-shrink-0 relative z-10">
                     <div className={`rounded-full overflow-hidden ${isCenter ? 'border-4 border-blue-400' : 'border-2 border-blue-300'} shadow-md bg-blue-100 transition-all duration-500`}>
-                      <Image 
-                        src={testimonial.img} 
-                        alt={testimonial.name} 
-                        width={isCenter ? 100 : 80} 
-                        height={isCenter ? 100 : 80} 
-                        className="object-cover w-full h-full" 
+                      <Image
+                        src={testimonial.img}
+                        alt={testimonial.name}
+                        width={isCenter ? 100 : 80}
+                        height={isCenter ? 100 : 80}
+                        className="object-cover w-full h-full"
                       />
                     </div>
                   </div>
-                  
+
                   <div className="flex-1 flex flex-col items-center text-center relative z-10">
                     <p className={`text-primary-blue/90 font-body ${isCenter ? 'text-lg' : 'text-base'} mb-4 leading-relaxed italic transition-all duration-500`}>
                       {testimonial.text}
                     </p>
-                    
+
                     <div className="mt-auto flex flex-col items-center gap-2">
                       <span className={`font-heading font-bold text-blue-700 ${isCenter ? 'text-xl' : 'text-lg'} transition-all duration-500`}>
                         {testimonial.name}
@@ -576,11 +576,10 @@ function TestimonialsSection() {
             <button
               key={idx}
               onClick={() => setCurrentIndex(idx)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                idx === currentIndex 
-                  ? 'bg-blue-600 w-8' 
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${idx === currentIndex
+                  ? 'bg-blue-600 w-8'
                   : 'bg-blue-300 hover:bg-blue-400'
-              }`}
+                }`}
             />
           ))}
         </div>
@@ -600,8 +599,8 @@ function ContactAndFAQSection() {
       a: 'Yes! We offer free trial classes so you can experience our teaching style before committing.',
     },
     {
-      q: 'What boards do you prepare students for?',
-      a: 'We primarily prepare students for AKU-EB, but our teaching also helps for other boards.',
+      q: 'What boards do you prepare student-portals for?',
+      a: 'We primarily prepare student-portals for AKU-EB, but our teaching also helps for other boards.',
     },
     {
       q: 'Do you offer online classes?',
