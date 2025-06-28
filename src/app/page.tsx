@@ -711,7 +711,7 @@ function BackDesign({ children }: { children: React.ReactNode }) {
       <svg className="absolute -top-10 -left-10 w-48 h-48 opacity-30 z-0 animate-spin-slow" viewBox="0 0 200 200" fill="none">
         <circle cx="100" cy="100" r="80" stroke="#3B82F6" strokeWidth="8" strokeDasharray="12 12" />
       </svg>
-      <svg className="absolute top-1/2 -right-16 w-40 h-40 opacity-20 z-0 animate-pulse" viewBox="0 0 160 160" fill="none">
+      <svg className="absolute top-1/2 -right-8 w-40 h-40 opacity-20 z-0 animate-pulse" viewBox="0 0 160 160" fill="none">
         <rect x="20" y="20" width="120" height="120" rx="40" stroke="#0EA5E9" strokeWidth="6" strokeDasharray="10 8" />
       </svg>
       <svg className="absolute bottom-0 left-1/3 w-32 h-32 opacity-25 z-0 animate-bounce-slow" viewBox="0 0 120 120" fill="none">

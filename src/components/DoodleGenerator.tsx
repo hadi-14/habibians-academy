@@ -453,6 +453,7 @@ export const useDoodles = (
   
   useEffect(() => {
     regenerateDoodles();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [count, containerWidth, containerHeight]);
   
   return { doodles, regenerateDoodles };
