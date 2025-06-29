@@ -35,7 +35,7 @@ function AnimatedCounter({ target, duration = 1200, className = '', suffix = '' 
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[auto_1fr_auto] items-center justify-items-center min-h-screen font-body">
+    <div className="grid grid-rows-[auto_1fr_auto] items-center justify-items-center min-h-screen font-body overflow-x-hidden">
       <main className="flex flex-col items-center sm:items-start w-full">
         <div className="p-8 w-full relative" id="hero">
           {/* AKU-EB Affiliation Stamp */}
@@ -49,8 +49,11 @@ export default function Home() {
 
             <CreativeDoodleBackground doodleCount={0} className="bg-primary-silver h-full w-full rounded-xl border-b-4 border-accent-navy">
               <section className="flex flex-col lg:flex-row items-center justify-between w-full gap-8 animate-fade-in shadow-lg p-8 md:p-12">
-                <Image src="/logo.svg" alt="Logo" width={250} height={250} priority />
-                <div className="pl-60 flex-1 flex flex-col items-start gap-6 w-full lg:w-auto">
+                <div className="flex-1 items-center justify-center">
+
+                  <Image src="/logo.svg" alt="Logo" width={250} height={250} priority />
+                </div>
+                <div className="flex-1 flex flex-col items-start gap-6 w-full lg:w-auto">
                   <h1 className="text-4xl md:text-5xl font-heading font-bold text-primary-blue mb-2 animate-slide-in-left">
                     Habibians&apos; Academy
                   </h1>
@@ -81,26 +84,26 @@ export default function Home() {
         </div>
 
         {/* Stats Ribbon Section */}
-        <section className="w-full max-w-6xl mx-auto -mt-8 flex flex-col items-center" id="stats">
-          <div className="w-full bg-accent-navy text-primary-white rounded-b-2xl shadow-lg flex flex-col sm:flex-row justify-around items-center py-6 px-4 gap-6 animate-fade-in">
-            <div className="flex flex-col items-center animate-bounce-slow">
-              <AnimatedCounter target={1000} duration={1200} className="text-2xl md:text-3xl font-heading font-bold" suffix="+" />
-              <span className="text-sm md:text-base opacity-80">Students</span>
+        <section className="w-full max-w-6xl mx-auto -mt-12 md:-mt-8 flex flex-col items-center px-8 md:px-12" id="stats">
+          <div className="w-full bg-accent-navy text-primary-white rounded-b-2xl shadow-lg flex flex-wrap justify-around items-center py-6 px-2 sm:px-4 gap-4 sm:gap-6 animate-fade-in">
+            <div className="flex flex-col items-center flex-1 min-w-[120px] animate-bounce-slow">
+              <AnimatedCounter target={1000} duration={1200} className="text-xl sm:text-2xl md:text-3xl font-heading font-bold" suffix="+" />
+              <span className="text-xs sm:text-sm md:text-base opacity-80">Students</span>
             </div>
             <span className="hidden sm:inline-block w-px h-8 bg-primary-white opacity-30"></span>
-            <div className="flex flex-col items-center animate-bounce-slow delay-100">
-              <AnimatedCounter target={100} duration={1000} className="text-2xl md:text-3xl font-heading font-bold" suffix="+" />
-              <span className="text-sm md:text-base opacity-80">Teachers</span>
+            <div className="flex flex-col items-center flex-1 min-w-[120px] animate-bounce-slow delay-100">
+              <AnimatedCounter target={100} duration={1000} className="text-xl sm:text-2xl md:text-3xl font-heading font-bold" suffix="+" />
+              <span className="text-xs sm:text-sm md:text-base opacity-80">Teachers</span>
             </div>
             <span className="hidden sm:inline-block w-px h-8 bg-primary-white opacity-30 delay-200"></span>
-            <div className="flex flex-col items-center animate-bounce-slow delay-200">
-              <AnimatedCounter target={10} duration={800} className="text-2xl md:text-3xl font-heading font-bold" suffix="+" />
-              <span className="text-sm md:text-base opacity-80">Courses</span>
+            <div className="flex flex-col items-center flex-1 min-w-[120px] animate-bounce-slow delay-200">
+              <AnimatedCounter target={10} duration={800} className="text-xl sm:text-2xl md:text-3xl font-heading font-bold" suffix="+" />
+              <span className="text-xs sm:text-sm md:text-base opacity-80">Courses</span>
             </div>
             <span className="hidden sm:inline-block w-px h-8 bg-primary-white opacity-30 delay-300"></span>
-            <div className="flex flex-col items-center animate-bounce-slow delay-300">
-              <AnimatedCounter target={3} duration={900} className="text-2xl md:text-3xl font-heading font-bold" suffix=" Years+" />
-              <span className="text-sm md:text-base opacity-80">Experience</span>
+            <div className="flex flex-col items-center flex-1 min-w-[120px] animate-bounce-slow delay-300">
+              <AnimatedCounter target={3} duration={900} className="text-xl sm:text-2xl md:text-3xl font-heading font-bold" suffix=" Years+" />
+              <span className="text-xs sm:text-sm md:text-base opacity-80">Experience</span>
             </div>
           </div>
         </section>
@@ -183,81 +186,81 @@ export default function Home() {
             <Image src="/bg-teaching.jpg" alt="Background Globe" fill className="object-cover w-full h-full opacity-60" style={{ zIndex: 0 }} priority />
             <div className="absolute inset-0 bg-accent-navy/60 mix-blend-multiply" style={{ zIndex: 1 }}></div>
           </div>
-          <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 bg-gradient-to-tr from-accent-lightblue/80 via-primary-white/90 to-primary-silver/80 rounded-2xl shadow-2xl p-8 md:p-12 mt-12 border-b-4 border-accent-navy">
-            <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-fit px-8 py-2 rounded-full bg-primary-white/90 shadow-lg border-2 border-accent-lightblue z-20">
-              <h2 className="text-2xl md:text-3xl font-heading font-bold text-primary-blue tracking-wide">Why Choose Us?</h2>
+          <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8 bg-gradient-to-tr from-accent-lightblue/80 via-primary-white/90 to-primary-silver/80 rounded-2xl shadow-2xl p-4 sm:p-6 md:p-12 mt-8 md:mt-12 border-b-4 border-accent-navy">
+            <div className="absolute -top-8 md:-top-10 left-1/2 -translate-x-1/2 w-fit px-4 md:px-8 py-2 rounded-full bg-primary-white/90 shadow-lg border-2 border-accent-lightblue z-20">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-heading font-bold text-primary-blue tracking-wide text-center">Why Choose Us?</h2>
             </div>
-            <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-8 mt-8 md:mt-0">
+            <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-8 mt-8 md:mt-0 w-full">
               <div className="flex flex-col items-start">
-                <span className="text-xl md:text-2xl font-heading font-bold text-primary-blue mb-1">1. Free trial</span>
-                <span className="text-sm md:text-base font-body text-primary-blue/80">Experience our platform with no commitment.</span>
+                <span className="text-base sm:text-lg md:text-2xl font-heading font-bold text-primary-blue mb-1">1. Free trial</span>
+                <span className="text-xs sm:text-sm md:text-base font-body text-primary-blue/80">Experience our platform with no commitment.</span>
               </div>
               <div className="flex flex-col items-start">
-                <span className="text-xl md:text-2xl font-heading font-bold text-primary-blue mb-1">2. Ebooks Library</span>
-                <span className="text-sm md:text-base font-body text-primary-blue/80">Access a wide range of learning resources.</span>
+                <span className="text-base sm:text-lg md:text-2xl font-heading font-bold text-primary-blue mb-1">2. Ebooks Library</span>
+                <span className="text-xs sm:text-sm md:text-base font-body text-primary-blue/80">Access a wide range of learning resources.</span>
               </div>
               <div className="flex flex-col items-start">
-                <span className="text-xl md:text-2xl font-heading font-bold text-primary-blue mb-1">3. Interactive Classes</span>
-                <span className="text-sm md:text-base font-body text-primary-blue/80">Engage with teachers and peers in real time.</span>
+                <span className="text-base sm:text-lg md:text-2xl font-heading font-bold text-primary-blue mb-1">3. Interactive Classes</span>
+                <span className="text-xs sm:text-sm md:text-base font-body text-primary-blue/80">Engage with teachers and peers in real time.</span>
               </div>
               <div className="flex flex-col items-start">
-                <span className="text-xl md:text-2xl font-heading font-bold text-primary-blue mb-1">4. Certified Teachers</span>
-                <span className="text-sm md:text-base font-body text-primary-blue/80">Learn from experienced, qualified educators.</span>
+                <span className="text-base sm:text-lg md:text-2xl font-heading font-bold text-primary-blue mb-1">4. Certified Teachers</span>
+                <span className="text-xs sm:text-sm md:text-base font-body text-primary-blue/80">Learn from experienced, qualified educators.</span>
               </div>
             </div>
-            <div className="flex-none flex items-center justify-center min-w-[180px] md:ml-12 mt-8 md:mt-0">
-              <Image src="/student-placeholder.avif" alt="Students" width={180} height={220} className="object-cover rounded-2xl shadow-lg border-4 border-accent-lightblue bg-primary-silver" priority />
+            <div className="flex-none flex items-center justify-center min-w-[100px] sm:min-w-[140px] md:min-w-[180px] md:ml-8 mt-8 md:mt-0">
+              <Image src="/student-placeholder.avif" alt="Students" width={120} height={150} className="object-cover rounded-2xl shadow-lg border-4 border-accent-lightblue bg-primary-silver w-[100px] h-[120px] sm:w-[140px] sm:h-[180px] md:w-[180px] md:h-[220px]" priority />
             </div>
           </div>
 
           {/* Major Groups Section */}
           <section
-            className="w-full max-w-7xl mx-auto mt-16 mb-8 px-4 py-12 rounded-2xl shadow-xl bg-gradient-to-br from-primary-silver via-primary-white to-accent-lightblue border-t-4 border-accent-navy animate-fade-in z-10 relative"
+            className="w-full max-w-7xl mx-auto mt-10 md:mt-16 mb-8 px-2 sm:px-4 py-8 sm:py-12 rounded-2xl shadow-xl bg-gradient-to-br from-primary-silver via-primary-white to-accent-lightblue border-t-4 border-accent-navy animate-fade-in z-10 relative"
             id="groups"
           >
-            <h2 className="text-2xl md:text-3xl font-heading font-bold text-primary-blue text-center mb-10 drop-shadow">Our Major Groups</h2>
-            <div className="flex flex-col md:flex-row gap-10 justify-center items-stretch">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-heading font-bold text-primary-blue text-center mb-6 sm:mb-10 drop-shadow">Our Major Groups</h2>
+            <div className="flex flex-col md:flex-row gap-6 md:gap-10 justify-center items-stretch">
               {/* Science Group */}
-              <div className="flex-1 flex flex-col items-center bg-primary-white/80 rounded-xl shadow-lg p-6 border-2 border-accent-lightblue">
-                <div className="w-28 h-28 mb-4 rounded-full overflow-hidden border-4 border-accent-navy bg-primary-silver flex items-center justify-center">
-                  <Image src="/affiliates/science-group.jpg" alt="Science Group" width={100} height={100} className="object-cover w-full h-full" />
+              <div className="flex-1 flex flex-col items-center bg-primary-white/80 rounded-xl shadow-lg p-4 sm:p-6 border-2 border-accent-lightblue mb-4 md:mb-0">
+                <div className="w-20 h-20 sm:w-28 sm:h-28 mb-4 rounded-full overflow-hidden border-4 border-accent-navy bg-primary-silver flex items-center justify-center">
+                  <Image src="/affiliates/science-group.jpg" alt="Science Group" width={80} height={80} className="object-cover w-full h-full sm:w-[100px] sm:h-[100px]" />
                 </div>
-                <h3 className="text-xl font-heading font-bold text-primary-blue mb-2">Science</h3>
-                <ul className="text-primary-blue/80 font-body text-base mb-2 list-disc list-inside">
+                <h3 className="text-base sm:text-lg md:text-xl font-heading font-bold text-primary-blue mb-2">Science</h3>
+                <ul className="text-primary-blue/80 font-body text-xs sm:text-sm md:text-base mb-2 list-disc list-inside">
                   <li>Biology</li>
                   <li>Chemistry</li>
                   <li>Physics</li>
                   <li>Mathematics</li>
                 </ul>
-                <div className="text-sm font-body text-accent-navy mt-2">Board: AKU-EB</div>
+                <div className="text-xs sm:text-sm font-body text-accent-navy mt-2">Board: AKU-EB</div>
               </div>
               {/* Commerce Group */}
-              <div className="flex-1 flex flex-col items-center bg-primary-white/80 rounded-xl shadow-lg p-6 border-2 border-accent-lightblue">
-                <div className="w-28 h-28 mb-4 rounded-full overflow-hidden border-4 border-accent-navy bg-primary-silver flex items-center justify-center">
-                  <Image src="/affiliates/commerce-group.png" alt="Commerce Group" width={100} height={100} className="object-cover w-full h-full" />
+              <div className="flex-1 flex flex-col items-center bg-primary-white/80 rounded-xl shadow-lg p-4 sm:p-6 border-2 border-accent-lightblue mb-4 md:mb-0">
+                <div className="w-20 h-20 sm:w-28 sm:h-28 mb-4 rounded-full overflow-hidden border-4 border-accent-navy bg-primary-silver flex items-center justify-center">
+                  <Image src="/affiliates/commerce-group.png" alt="Commerce Group" width={80} height={80} className="object-cover w-full h-full sm:w-[100px] sm:h-[100px]" />
                 </div>
-                <h3 className="text-xl font-heading font-bold text-primary-blue mb-2">Commerce</h3>
-                <ul className="text-primary-blue/80 font-body text-base mb-2 list-disc list-inside">
+                <h3 className="text-base sm:text-lg md:text-xl font-heading font-bold text-primary-blue mb-2">Commerce</h3>
+                <ul className="text-primary-blue/80 font-body text-xs sm:text-sm md:text-base mb-2 list-disc list-inside">
                   <li>Accounting</li>
                   <li>Business Math</li>
                   <li>Economics</li>
                   <li>Principles of Commerce</li>
                 </ul>
-                <div className="text-sm font-body text-accent-navy mt-2">Board: AKU-EB</div>
+                <div className="text-xs sm:text-sm font-body text-accent-navy mt-2">Board: AKU-EB</div>
               </div>
               {/* Pre-Engineering Group */}
-              <div className="flex-1 flex flex-col items-center bg-primary-white/80 rounded-xl shadow-lg p-6 border-2 border-accent-lightblue">
-                <div className="w-28 h-28 mb-4 rounded-full overflow-hidden border-4 border-accent-navy bg-primary-silver flex items-center justify-center">
-                  <Image src="/affiliates/engineering-group.png" alt="Pre-Engineering Group" width={100} height={100} className="object-cover w-full h-full" />
+              <div className="flex-1 flex flex-col items-center bg-primary-white/80 rounded-xl shadow-lg p-4 sm:p-6 border-2 border-accent-lightblue">
+                <div className="w-20 h-20 sm:w-28 sm:h-28 mb-4 rounded-full overflow-hidden border-4 border-accent-navy bg-primary-silver flex items-center justify-center">
+                  <Image src="/affiliates/engineering-group.png" alt="Pre-Engineering Group" width={80} height={80} className="object-cover w-full h-full sm:w-[100px] sm:h-[100px]" />
                 </div>
-                <h3 className="text-xl font-heading font-bold text-primary-blue mb-2">Pre-Engineering</h3>
-                <ul className="text-primary-blue/80 font-body text-base mb-2 list-disc list-inside">
+                <h3 className="text-base sm:text-lg md:text-xl font-heading font-bold text-primary-blue mb-2">Pre-Engineering</h3>
+                <ul className="text-primary-blue/80 font-body text-xs sm:text-sm md:text-base mb-2 list-disc list-inside">
                   <li>Mathematics</li>
                   <li>Physics</li>
                   <li>Chemistry</li>
                   <li>Computer Science</li>
                 </ul>
-                <div className="text-sm font-body text-accent-navy mt-2">Board: AKU-EB</div>
+                <div className="text-xs sm:text-sm font-body text-accent-navy mt-2">Board: AKU-EB</div>
               </div>
             </div>
           </section>
@@ -510,8 +513,8 @@ function TestimonialsSection() {
         <div className="flex justify-center items-stretch gap-8 py-8 min-h-[450px] relative overflow-hidden">
           {visibleCards.map((testimonial) => {
             const offset = testimonial.position;
-            const isCenter = offset === 0;
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const isCenter = offset === 0;
             const isSide = Math.abs(offset) === 1;
 
             // Opacity: center 1, side 0.8
@@ -694,8 +697,8 @@ function ContactAndFAQSection() {
             </form>
             <div className="mt-6 text-primary-blue/80 font-body space-y-2 text-sm">
               <div><span className="font-bold">Email:</span> habibiansacademy@gmail.com</div>
-              <div><span className="font-bold">Phone:</span> +92 300 1234567</div>
-              <div><span className="font-bold">Address:</span> 123 Main Street, Hyderabad, Pakistan</div>
+              <div><span className="font-bold">Phone:</span> +92 300 2662701</div>
+              <div><span className="font-bold">Address:</span> Suit 402, 4th Floor, Block 10 Gulshan-e-Iqbal, Nipa, Main, Main University Rd, Block 10 Gulshan-e-Iqbal, Karachi, 75300, Pakistan</div>
             </div>
           </div>
         </div>

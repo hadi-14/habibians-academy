@@ -163,7 +163,7 @@ export default function DashboardPage() {
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-full border-3 border-white/90 overflow-hidden shadow-xl backdrop-blur-sm">
               <div className="w-full h-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center">
-                <span className="text-white text-lg font-bold">S</span>
+                <span className="text-white text-lg font-bold">AH</span>
               </div>
             </div>
             <div>

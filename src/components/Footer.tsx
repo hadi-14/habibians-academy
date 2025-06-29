@@ -24,8 +24,8 @@ export default function Footer() {
                 <div>
                     <div className="font-heading font-bold text-lg mb-2">Contact</div>
                     <div className="text-sm">habibiansacademy@gmail.com</div>
-                    <div className="text-sm">+92 300 1234567</div>
-                    <div className="text-sm">123 Main Street, Hyderabad</div>
+                    <div className="text-sm">+92 300 2662701</div>
+                    <div className="text-sm">Suit 402, 4th Floor, Block 10 Gulshan-e-Iqbal, Nipa, Main, Main University Rd, Block 10 Gulshan-e-Iqbal, Karachi, 75300</div>
                 </div>
                 {/* Social Links */}
                 <div>
