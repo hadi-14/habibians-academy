@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     },
   ],
   icons: "favicon.ico",
-  keywords: ["Habibian's Academy", "habibians-academy", "college", "education", "coaching", "online school"],
+  keywords: ["Habibians' Academy", "habibians-academy", "college", "education", "coaching", "online school"],
 };
 
 export default function RootLayout({
@@ -40,8 +40,24 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-primary-white text-primary-black font-body min-h-screen flex flex-col`}
       >
+        {/* Fixed Logo Background */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            zIndex: 0,
+            pointerEvents: 'none',
+            background: `url('/logo.svg') no-repeat center center`,
+            backgroundSize: 'contain',
+            opacity: 0.15,
+          }}
+        />
         <Header />
-        <main className="flex-1">{children}</main>
+        <main className="flex-1" style={{ position: 'relative', zIndex: 1 }}>{children}</main>
         <Footer />
       </body>
     </html>

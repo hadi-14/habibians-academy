@@ -35,7 +35,7 @@ function AnimatedCounter({ target, duration = 1200, className = '', suffix = '' 
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[auto_1fr_auto] items-center justify-items-center min-h-screen font-body bg-primary-white">
+    <div className="grid grid-rows-[auto_1fr_auto] items-center justify-items-center min-h-screen font-body">
       <main className="flex flex-col items-center sm:items-start w-full">
         <div className="p-8 w-full relative" id="hero">
           {/* AKU-EB Affiliation Stamp */}
@@ -47,14 +47,15 @@ export default function Home() {
           </div>
           <BackDesign>
 
-            <CreativeDoodleBackground doodleCount={25} className="bg-primary-silver h-full w-full rounded-xl border-b-4 border-accent-navy">
+            <CreativeDoodleBackground doodleCount={0} className="bg-primary-silver h-full w-full rounded-xl border-b-4 border-accent-navy">
               <section className="flex flex-col lg:flex-row items-center justify-between w-full gap-8 animate-fade-in shadow-lg p-8 md:p-12">
-                <div className="flex-1 flex flex-col items-start gap-6 w-full lg:w-auto">
+                <Image src="/logo.svg" alt="Logo" width={250} height={250} priority />
+                <div className="pl-60 flex-1 flex flex-col items-start gap-6 w-full lg:w-auto">
                   <h1 className="text-4xl md:text-5xl font-heading font-bold text-primary-blue mb-2 animate-slide-in-left">
-                    Habibian&apos;s Academy
+                    Habibians&apos; Academy
                   </h1>
                   <blockquote className="text-lg md:text-xl italic text-accent-navy border-l-4 border-accent-lightblue pl-4 animate-fade-in delay-200">
-                    &quot;Empowering student-portals to create, explore, and achieve their dreams.&quot;
+                    &quot;Inclusive, Inspired, Inimitable.&quot;
                   </blockquote>
                   <a href="/enroll" className="mt-4 inline-block px-8 py-3 rounded-full bg-accent-lightblue text-primary-blue font-heading font-bold text-lg shadow-lg hover:bg-accent-navy hover:text-primary-white transition-colors animate-fade-in delay-300">
                     Enroll Now
@@ -84,7 +85,7 @@ export default function Home() {
           <div className="w-full bg-accent-navy text-primary-white rounded-b-2xl shadow-lg flex flex-col sm:flex-row justify-around items-center py-6 px-4 gap-6 animate-fade-in">
             <div className="flex flex-col items-center animate-bounce-slow">
               <AnimatedCounter target={1000} duration={1200} className="text-2xl md:text-3xl font-heading font-bold" suffix="+" />
-              <span className="text-sm md:text-base opacity-80">student-portals</span>
+              <span className="text-sm md:text-base opacity-80">Students</span>
             </div>
             <span className="hidden sm:inline-block w-px h-8 bg-primary-white opacity-30"></span>
             <div className="flex flex-col items-center animate-bounce-slow delay-100">
@@ -106,70 +107,71 @@ export default function Home() {
 
         {/* Who We Are + Mission/Vision/History Section */}
         <section
-          className="w-full max-w-7xl mx-auto items-center justify-center bg-gradient-to-br from-primary-silver via-primary-white to-accent-lightblue rounded-2xl shadow-xl p-8 md:p-12 my-12 animate-fade-in min-h-[400px] border-t-4 border-accent-lightblue"
+          className="w-full px-10 items-center justify-center my-12"
           id="about"
         >
-          <div className="flex flex-col md:flex-row gap-8 pb-8 px-8">
-            <div className="flex-none flex items-center justify-center min-w-[120px] md:mr-10">
-              <Image src="/logo.svg" alt="Logo" width={150} height={150} priority />
+          <div className="bg-gradient-to-br from-primary-silver via-primary-white to-accent-lightblue rounded-2xl shadow-xl p-8 md:p-12 animate-fade-in min-h-[400px] border-t-4 border-accent-lightblue w-full">
+
+            <div className="flex flex-col md:flex-row gap-8 pb-8 px-8">
+              <div className="flex-none flex items-center justify-center min-w-[120px] md:mr-10">
+                <Image src="/logo.svg" alt="Logo" width={150} height={150} priority />
+              </div>
+              <div className="flex-1 flex flex-col items-start gap-6 md:ml-12">
+                <div>
+                  <h2 className="text-2xl md:text-3xl font-heading font-bold text-primary-blue mb-2 drop-shadow">Who we are?</h2>
+                  <p className="text-base md:text-xl font-body text-primary-blue/80 leading-snug">
+                    A group educationists with an ardent desire to evolve the educational system to its complete potential and go further beyond in the pursuit of educational excellence. Accessibility, empowerment and inclusivity is what we yearn to offer to any and every learner we come across.
+                  </p>
+                </div>
+              </div>
             </div>
-            <div className="flex-1 flex flex-col items-start gap-6 md:ml-12">
-              <div>
-                <h2 className="text-2xl md:text-3xl font-heading font-bold text-primary-blue mb-2 drop-shadow">Who we are?</h2>
-                <p className="text-base md:text-xl font-body text-primary-blue/80 leading-snug">
-                  We are a passionate community of educators and learners, dedicated to fostering creativity, curiosity, and excellence.
+            <div className="w-full flex flex-col md:flex-row items-stretch justify-center gap-6 bg-primary-white/80 rounded-xl shadow-lg p-4 md:p-8 border-l-4 border-accent-navy">
+              <div className="flex-1 flex flex-col items-start gap-3 border-r border-primary-silver pr-8 last:border-none">
+                <h3 className="text-xl md:text-2xl font-heading font-bold text-primary-blue underline underline-offset-4 decoration-accent-lightblue mb-2">Our Mission</h3>
+                <p className="text-base md:text-lg font-body text-primary-blue/80 leading-snug">
+                  To go beyond the current practices and provide a platform integrated towards a 21st century learner while catering to all educational needs.
+                </p>
+              </div>
+              <div className="flex-1 flex flex-col items-start gap-3 border-r border-primary-silver pr-8 last:border-none">
+                <h3 className="text-xl md:text-2xl font-heading font-bold text-primary-blue underline underline-offset-4 decoration-accent-lightblue mb-2">Our Vision</h3>
+                <p className="text-base md:text-lg font-body text-primary-blue/80 leading-snug">
+                  To leave no enthusiastic learner without the accessibility of modern education..
+                </p>
+              </div>
+              <div className="flex-1 flex flex-col items-start gap-3">
+                <h3 className="text-xl md:text-2xl font-heading font-bold text-primary-blue underline underline-offset-4 decoration-accent-lightblue mb-2">Our History</h3>
+                <p className="text-base md:text-lg font-body text-primary-blue/80 leading-snug">
+                  Teaching from <span className="font-bold underline decoration-accent-lightblue">2014</span>, we have grown from a small group of passionate educators to a thriving community making a difference every day.
                 </p>
               </div>
             </div>
-          </div>
-          <div className="w-full flex flex-col md:flex-row items-stretch justify-center gap-6 bg-primary-white/80 rounded-xl shadow-lg p-4 md:p-8 border-l-4 border-accent-navy">
-            <div className="flex-1 flex flex-col items-start gap-3 border-r border-primary-silver pr-8 last:border-none">
-              <h3 className="text-xl md:text-2xl font-heading font-bold text-primary-blue underline underline-offset-4 decoration-accent-lightblue mb-2">Our Mission</h3>
-              <p className="text-base md:text-lg font-body text-primary-blue/80 leading-snug">
-                To inspire and empower every student-portal to reach their full potential through creativity, critical thinking, and lifelong learning.
-              </p>
-            </div>
-            <div className="flex-1 flex flex-col items-start gap-3 border-r border-primary-silver pr-8 last:border-none">
-              <h3 className="text-xl md:text-2xl font-heading font-bold text-primary-blue underline underline-offset-4 decoration-accent-lightblue mb-2">Our Vision</h3>
-              <p className="text-base md:text-lg font-body text-primary-blue/80 leading-snug">
-                To be a leading academy recognized for innovative teaching, inclusivity, and nurturing future leaders.
-              </p>
-            </div>
-            <div className="flex-1 flex flex-col items-start gap-3">
-              <h3 className="text-xl md:text-2xl font-heading font-bold text-primary-blue underline underline-offset-4 decoration-accent-lightblue mb-2">Our History</h3>
-              <p className="text-base md:text-lg font-body text-primary-blue/80 leading-snug">
-                Teaching from <span className="font-bold underline decoration-accent-lightblue">2019</span>, we have grown from a small group of passionate educators to a thriving community making a difference every day.
-              </p>
-            </div>
-          </div>
-          {/* Founder Message Section */}
-          <section
-            className="w-full flex flex-col md:flex-row items-center gap-8 mt-10 bg-gradient-to-r from-blue-50 via-white to-accent-lightblue/20 rounded-2xl shadow-lg p-6 md:p-10 border-t-4 border-accent-navy"
-            id="founder"
-          >
-            <div className="flex-1 flex flex-col items-start">
-              <h3 className="text-2xl md:text-3xl font-heading font-bold text-primary-blue mb-2">Message from the Founder</h3>
-              <p className="text-base md:text-lg font-body text-primary-blue/80 mb-4">
-                &quot;At Habibians Academy, our mission is to nurture not just academic excellence, but also character, creativity, and confidence.
-                Every student-portal is unique, and we strive to provide an environment where each one can discover their strengths and achieve their dreams.
-                Thank you for being part of our journey.&quot;
-              </p>
-              <div className="mt-2 font-heading font-bold text-accent-navy">- Sir Abdul Samad, Founder & Principal</div>
-            </div>
-            <div className="flex-1 flex items-center justify-center w-full max-w-lg">
-              <div className="relative w-full aspect-video rounded-xl overflow-hidden shadow-lg ring-4 ring-accent-lightblue ring-offset-4 ring-offset-blue-50 transition-all duration-500 hover:scale-105 hover:ring-accent-navy group">
-                <iframe
-                  className="w-full h-full group-hover:shadow-2xl group-hover:brightness-110 transition-all duration-500"
-                  src="https://www.youtube.com/embed/2vjPBrBU-TM"
-                  title="Founder Message"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
-                <span className="absolute inset-0 rounded-xl ring-4 ring-accent-lightblue opacity-40 animate-pulse pointer-events-none"></span>
+            {/* Founder Message Section */}
+            <section
+              className="w-full flex flex-col md:flex-row items-center gap-8 mt-10 bg-gradient-to-r from-blue-50 via-white to-accent-lightblue/20 rounded-2xl shadow-lg p-6 md:p-10 border-t-4 border-accent-navy"
+              id="founder"
+            >
+              <div className="flex-1 flex flex-col items-start">
+                <h3 className="text-2xl md:text-3xl font-heading font-bold text-primary-blue mb-2">Message from the Founder</h3>
+                <p className="text-base md:text-lg font-body text-primary-blue/80 mb-4">
+                  &quot;The tides of the modern era have been at our shore for long enough, and its time we adapted our education with them like we have with everything else. Only then can we excel beyond what we currently are.&quot;
+                </p>
+                <div className="mt-2 font-heading font-bold text-accent-navy">- Sir Abdul Samad, Founder & Educationist</div>
               </div>
-            </div>
-          </section>
+              <div className="flex-1 flex items-center justify-center w-full max-w-lg">
+                <div className="relative w-full aspect-video rounded-xl overflow-hidden shadow-lg ring-4 ring-accent-lightblue ring-offset-4 ring-offset-blue-50 transition-all duration-500 hover:scale-105 hover:ring-accent-navy group">
+                  <iframe
+                    className="w-full h-full group-hover:shadow-2xl group-hover:brightness-110 transition-all duration-500"
+                    src="https://www.youtube.com/embed/2vjPBrBU-TM"
+                    title="Founder Message"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                  <span className="absolute inset-0 rounded-xl ring-4 ring-accent-lightblue opacity-40 animate-pulse pointer-events-none"></span>
+                </div>
+              </div>
+            </section>
+          </div>
         </section>
 
         {/* Why Choose Us Section */}
@@ -204,7 +206,7 @@ export default function Home() {
               </div>
             </div>
             <div className="flex-none flex items-center justify-center min-w-[180px] md:ml-12 mt-8 md:mt-0">
-              <Image src="/student-placeholder.avif" alt="student-portal" width={180} height={220} className="object-cover rounded-2xl shadow-lg border-4 border-accent-lightblue bg-primary-silver" priority />
+              <Image src="/student-placeholder.avif" alt="Students" width={180} height={220} className="object-cover rounded-2xl shadow-lg border-4 border-accent-lightblue bg-primary-silver" priority />
             </div>
           </div>
 
@@ -278,18 +280,18 @@ export default function Home() {
 
 function FacultyCarousel() {
   const faculty = [
-    { name: 'Mr. Ahmed', subject: 'English', role: 'Senior Lecturer', img: '/Faculty/Man.png' },
-    { name: 'Ms. Fatima', subject: 'Urdu', role: 'Lecturer', img: '/Faculty/Woman.png' },
-    { name: 'Mr. Ali', subject: 'Islamiat', role: 'Lecturer', img: '/Faculty/Man.png' },
-    { name: 'Ms. Sana', subject: 'Pakistan Studies', role: 'Lecturer', img: '/Faculty/Woman.png' },
-    { name: 'Dr. Khan', subject: 'Physics', role: 'Head of Science', img: '/Faculty/Man.png' },
-    { name: 'Ms. Ayesha', subject: 'Biology', role: 'Lecturer', img: '/Faculty/Woman.png' },
-    { name: 'Mr. Bilal', subject: 'Chemistry', role: 'Lecturer', img: '/Faculty/Man.png' },
-    { name: 'Ms. Sara', subject: 'Computer Science', role: 'Lecturer', img: '/Faculty/Woman.png' },
-    { name: 'Mr. Imran', subject: 'Maths', role: 'Lecturer', img: '/Faculty/Man.png' },
-    { name: 'Ms. Hina', subject: 'Business Maths', role: 'Lecturer', img: '/Faculty/Woman.png' },
-    { name: 'Mr. Kamran', subject: 'Accounts', role: 'Lecturer', img: '/Faculty/Man.png' },
-    { name: 'Ms. Rabia', subject: 'Economics', role: 'Lecturer', img: '/Faculty/Woman.png' },
+    { name: 'Revealing Soon!', subject: 'English', role: 'Senior Lecturer', img: '/Faculty/Man.png' },
+    { name: 'Revealing Soon!', subject: 'Urdu', role: 'Lecturer', img: '/Faculty/Woman.png' },
+    { name: 'Revealing Soon!', subject: 'Islamiat', role: 'Lecturer', img: '/Faculty/Man.png' },
+    { name: 'Revealing Soon!', subject: 'Pakistan Studies', role: 'Lecturer', img: '/Faculty/Woman.png' },
+    { name: 'Revealing Soon!', subject: 'Physics', role: 'Head of Science', img: '/Faculty/Man.png' },
+    { name: 'Revealing Soon!', subject: 'Biology', role: 'Lecturer', img: '/Faculty/Woman.png' },
+    { name: 'Revealing Soon!', subject: 'Chemistry', role: 'Lecturer', img: '/Faculty/Man.png' },
+    { name: 'Revealing Soon!', subject: 'Computer Science', role: 'Lecturer', img: '/Faculty/Woman.png' },
+    { name: 'Revealing Soon!', subject: 'Maths', role: 'Lecturer', img: '/Faculty/Man.png' },
+    { name: 'Revealing Soon!', subject: 'Business Maths', role: 'Lecturer', img: '/Faculty/Woman.png' },
+    { name: 'Revealing Soon!', subject: 'Accounts', role: 'Lecturer', img: '/Faculty/Man.png' },
+    { name: 'Revealing Soon!', subject: 'Economics', role: 'Lecturer', img: '/Faculty/Woman.png' },
   ];
 
   const CARD_COUNT = 5;
@@ -414,7 +416,7 @@ function TestimonialsSection() {
     {
       name: 'Bilal Khan',
       img: '/student-placeholder.avif',
-      text: 'The interactive classes and free trial made it easy to choose Habibians. Highly recommended for Commerce student-portals!',
+      text: 'The interactive classes and free trial made it easy to choose Habibians. Highly recommended for Commerce Students!',
       group: 'Commerce',
     },
     {
@@ -481,7 +483,7 @@ function TestimonialsSection() {
         <rect x="20" y="20" width="160" height="160" rx="60" fill="#6366F1" />
       </svg>
 
-      <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary-blue text-center mb-12 drop-shadow-lg tracking-tight z-10 animate-bounce">What Our student-portals Say</h2>
+      <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary-blue text-center mb-12 drop-shadow-lg tracking-tight z-10 animate-bounce">What Our Students Say</h2>
 
       <div className="relative w-full max-w-5xl mx-auto">
         {/* Left Arrow */}
@@ -577,8 +579,8 @@ function TestimonialsSection() {
               key={idx}
               onClick={() => setCurrentIndex(idx)}
               className={`w-3 h-3 rounded-full transition-all duration-300 ${idx === currentIndex
-                  ? 'bg-blue-600 w-8'
-                  : 'bg-blue-300 hover:bg-blue-400'
+                ? 'bg-blue-600 w-8'
+                : 'bg-blue-300 hover:bg-blue-400'
                 }`}
             />
           ))}
@@ -599,8 +601,8 @@ function ContactAndFAQSection() {
       a: 'Yes! We offer free trial classes so you can experience our teaching style before committing.',
     },
     {
-      q: 'What boards do you prepare student-portals for?',
-      a: 'We primarily prepare student-portals for AKU-EB, but our teaching also helps for other boards.',
+      q: 'What boards do you prepare students for?',
+      a: 'We primarily prepare students for AKU-EB, but our teaching also helps for other boards.',
     },
     {
       q: 'Do you offer online classes?',
@@ -691,7 +693,7 @@ function ContactAndFAQSection() {
               <button type="submit" className="mt-2 px-8 py-3 rounded-full bg-accent-lightblue text-primary-blue font-heading font-bold text-lg shadow-lg hover:bg-accent-navy hover:text-primary-white transition-colors">Send Message</button>
             </form>
             <div className="mt-6 text-primary-blue/80 font-body space-y-2 text-sm">
-              <div><span className="font-bold">Email:</span> info@habibiansacademy.com</div>
+              <div><span className="font-bold">Email:</span> habibiansacademy@gmail.com</div>
               <div><span className="font-bold">Phone:</span> +92 300 1234567</div>
               <div><span className="font-bold">Address:</span> 123 Main Street, Hyderabad, Pakistan</div>
             </div>

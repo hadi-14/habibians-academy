@@ -23,7 +23,7 @@ export default function Footer() {
                 {/* Contact Info */}
                 <div>
                     <div className="font-heading font-bold text-lg mb-2">Contact</div>
-                    <div className="text-sm">info@habibiansacademy.com</div>
+                    <div className="text-sm">habibiansacademy@gmail.com</div>
                     <div className="text-sm">+92 300 1234567</div>
                     <div className="text-sm">123 Main Street, Hyderabad</div>
                 </div>
@@ -31,7 +31,7 @@ export default function Footer() {
                 <div>
                     <div className="font-heading font-bold text-lg mb-2">Follow Us</div>
                     <div className="flex flex-col items-center md:items-start gap-2 mt-2">
-                        <a href="#" aria-label="Facebook" className="flex items-center gap-2 hover:text-accent-navy px-2 py-1 rounded transition">
+                        <a href="https://www.facebook.com/HabibiansAcademy/" aria-label="Facebook" className="flex items-center gap-2 hover:text-accent-navy px-2 py-1 rounded transition">
                             <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M22 12c0-5.522-4.477-10-10-10S2 6.478 2 12c0 4.991 3.657 9.128 8.438 9.877v-6.987h-2.54v-2.89h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.242 0-1.632.771-1.632 1.562v1.875h2.773l-.443 2.89h-2.33v6.987C18.343 21.128 22 16.991 22 12z" />
                             </svg>
