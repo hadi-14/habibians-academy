@@ -15,7 +15,7 @@ import { db, storage, auth } from '@/firebase/config';
 import Image from "next/image";
 import { getDownloadURL, ref } from 'firebase/storage';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { createUserProfile, getUsersByRole } from '@/firebase/users';
+import { getUsersByRole } from '@/firebase/users';
 
 // Interfaces for type safety
 interface PersonalInfo {
@@ -77,7 +77,16 @@ const AdminDashboard: React.FC = () => {
     const [regError, setRegError] = useState('');
     const [regSuccess, setRegSuccess] = useState('');
     const [regLoading, setRegLoading] = useState(false);
-    const [teachers, setTeachers] = useState<any[]>([]);
+    interface Teacher {
+        uid: string;
+        name: string;
+        email: string;
+        teacherId: string;
+        phone: string;
+        createdAt?: { seconds: number; nanoseconds: number } | Date;
+    }
+    
+    const [teachers, setTeachers] = useState<Teacher[]>([]);
 
     // Fetch admission entries
     useEffect(() => {
@@ -131,7 +140,26 @@ const AdminDashboard: React.FC = () => {
 
     // Fetch teachers
     useEffect(() => {
-        getUsersByRole('teacher').then(setTeachers);
+        getUsersByRole('teacher').then((users) => {
+            // Ensure all required Teacher fields are present
+            setTeachers(
+                users.map((u: {
+                    uid: string;
+                    name?: string;
+                    email?: string;
+                    teacherId?: string;
+                    phone?: string;
+                    createdAt?: { seconds: number; nanoseconds: number } | Date;
+                }) => ({
+                    uid: u.uid,
+                    name: u.name ?? '',
+                    email: u.email ?? '',
+                    teacherId: u.teacherId ?? '',
+                    phone: u.phone ?? '',
+                    createdAt: u.createdAt,
+                }))
+            );
+        });
     }, []);
 
     // Utility functions
@@ -246,7 +274,7 @@ const AdminDashboard: React.FC = () => {
             // Fetch teachers from 'teachers' collection
             const q = query(collection(db, 'teachers'), orderBy('createdAt', 'desc'));
             const querySnapshot = await getDocs(q);
-            setTeachers(querySnapshot.docs.map(doc => doc.data()));
+            setTeachers(querySnapshot.docs.map(doc => ({ uid: doc.id, ...doc.data() } as Teacher)));
         } catch (err) {
             setRegError(err instanceof Error ? err.message : 'Registration failed');
         }
@@ -672,7 +700,22 @@ const AdminDashboard: React.FC = () => {
                                             <div className="text-sm text-emerald-700 font-medium">Total Teachers</div>
                                         </div>
                                         <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-100">
-                                            <div className="text-2xl font-bold text-blue-600">{teachers.filter(t => t.createdAt && new Date(t.createdAt.seconds * 1000) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)).length}</div>
+                                            <div className="text-2xl font-bold text-blue-600">
+                                                {
+                                                    teachers.filter(t => {
+                                                        if (!t.createdAt) return false;
+                                                        let createdDate: Date;
+                                                        if (t.createdAt instanceof Date) {
+                                                            createdDate = t.createdAt;
+                                                        } else if ('seconds' in t.createdAt) {
+                                                            createdDate = new Date(t.createdAt.seconds * 1000);
+                                                        } else {
+                                                            return false;
+                                                        }
+                                                        return createdDate > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+                                                    }).length
+                                                }
+                                            </div>
                                             <div className="text-sm text-blue-700 font-medium">New This Month</div>
                                         </div>
                                     </div>

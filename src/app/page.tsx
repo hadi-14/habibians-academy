@@ -196,8 +196,8 @@ export default function Home() {
                 <span className="text-xs sm:text-sm md:text-base font-body text-primary-blue/80">Experience our platform with no commitment.</span>
               </div>
               <div className="flex flex-col items-start">
-                <span className="text-base sm:text-lg md:text-2xl font-heading font-bold text-primary-blue mb-1">2. Ebooks Library</span>
-                <span className="text-xs sm:text-sm md:text-base font-body text-primary-blue/80">Access a wide range of learning resources.</span>
+                <span className="text-base sm:text-lg md:text-2xl font-heading font-bold text-primary-blue mb-1">2. Remote learning</span>
+                <span className="text-xs sm:text-sm md:text-base font-body text-primary-blue/80">Accessibility and student comfort.</span>
               </div>
               <div className="flex flex-col items-start">
                 <span className="text-base sm:text-lg md:text-2xl font-heading font-bold text-primary-blue mb-1">3. Interactive Classes</span>
@@ -225,7 +225,7 @@ export default function Home() {
                 <div className="w-20 h-20 sm:w-28 sm:h-28 mb-4 rounded-full overflow-hidden border-4 border-accent-navy bg-primary-silver flex items-center justify-center">
                   <Image src="/affiliates/science-group.jpg" alt="Science Group" width={80} height={80} className="object-cover w-full h-full sm:w-[100px] sm:h-[100px]" />
                 </div>
-                <h3 className="text-base sm:text-lg md:text-xl font-heading font-bold text-primary-blue mb-2">Science</h3>
+                <h3 className="text-base sm:text-lg md:text-xl font-heading font-bold text-primary-blue mb-2">Pre-Medical</h3>
                 <ul className="text-primary-blue/80 font-body text-xs sm:text-sm md:text-base mb-2 list-disc list-inside">
                   <li>Biology</li>
                   <li>Chemistry</li>
@@ -695,7 +695,7 @@ function ContactAndFAQSection() {
             </form>
             <div className="mt-6 text-primary-blue/80 font-body space-y-2 text-sm">
               <div><span className="font-bold">Email:</span> habibiansacademy@gmail.com</div>
-              <div><span className="font-bold">Phone:</span> +92 300 2662701</div>
+              <div><span className="font-bold">Phone:</span> +92 300 2662701 </div>
               <div><span className="font-bold">Address:</span> Suit 402, 4th Floor, Block 10 Gulshan-e-Iqbal, Nipa, Main, Main University Rd, Block 10 Gulshan-e-Iqbal, Karachi, 75300, Pakistan</div>
             </div>
           </div>

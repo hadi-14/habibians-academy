@@ -51,7 +51,7 @@ export default function Header() {
                         href="#groups"
                         className="font-semibold text-primary-white hover:text-accent-lightblue transition-colors duration-200 relative group"
                     >
-                        Routes
+                        Courses
                         <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent-lightblue transition-all duration-200 group-hover:w-full"></span>
                     </Link>
                     <Link
