@@ -513,9 +513,7 @@ function TestimonialsSection() {
         <div className="flex justify-center items-stretch gap-8 py-8 min-h-[450px] relative overflow-hidden">
           {visibleCards.map((testimonial) => {
             const offset = testimonial.position;
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const isCenter = offset === 0;
-            const isSide = Math.abs(offset) === 1;
 
             // Opacity: center 1, side 0.8
             const opacity = isCenter ? 1 : 0.8;

@@ -8,11 +8,14 @@ import {
     orderBy,
     updateDoc,
     doc,
-    deleteDoc
+    deleteDoc,
+    setDoc
 } from 'firebase/firestore';
-import { db, storage } from '@/firebase/config';
+import { db, storage, auth } from '@/firebase/config';
 import Image from "next/image";
 import { getDownloadURL, ref } from 'firebase/storage';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserProfile, getUsersByRole } from '@/firebase/users';
 
 // Interfaces for type safety
 interface PersonalInfo {
@@ -65,11 +68,16 @@ const AdminDashboard: React.FC = () => {
     const [questions, setQuestions] = useState<Question[]>([]);
     const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState<'entries' | 'questions'>('entries');
+    const [activeTab, setActiveTab] = useState<'entries' | 'questions' | 'teachers'>('entries');
     const [documentViewer, setDocumentViewer] = useState<{
         imageUrl: string;
         title: string;
     } | null>(null);
+    const [teacherForm, setTeacherForm] = useState({ name: '', email: '', password: '', phone: '' });
+    const [regError, setRegError] = useState('');
+    const [regSuccess, setRegSuccess] = useState('');
+    const [regLoading, setRegLoading] = useState(false);
+    const [teachers, setTeachers] = useState<any[]>([]);
 
     // Fetch admission entries
     useEffect(() => {
@@ -119,6 +127,11 @@ const AdminDashboard: React.FC = () => {
         };
 
         fetchQuestions();
+    }, []);
+
+    // Fetch teachers
+    useEffect(() => {
+        getUsersByRole('teacher').then(setTeachers);
     }, []);
 
     // Utility functions
@@ -210,13 +223,42 @@ const AdminDashboard: React.FC = () => {
             .catch((error) => console.error(error));
     };
 
+    async function handleRegisterTeacher(e: React.FormEvent) {
+        e.preventDefault();
+        setRegError('');
+        setRegSuccess('');
+        setRegLoading(true);
+        try {
+            const userCred = await createUserWithEmailAndPassword(auth, teacherForm.email, teacherForm.password);
+            // Assign teacherId automatically (e.g., use UID or a prefix)
+            const teacherId = `T-${userCred.user.uid.slice(0, 8).toUpperCase()}`;
+            // Add teacher to 'teachers' collection instead of 'users'
+            await setDoc(doc(db, 'teachers', userCred.user.uid), {
+                name: teacherForm.name,
+                email: teacherForm.email,
+                teacherId,
+                phone: teacherForm.phone,
+                createdAt: new Date(),
+                uid: userCred.user.uid
+            });
+            setRegSuccess('Teacher registered!');
+            setTeacherForm({ name: '', email: '', password: '', phone: '' });
+            // Fetch teachers from 'teachers' collection
+            const q = query(collection(db, 'teachers'), orderBy('createdAt', 'desc'));
+            const querySnapshot = await getDocs(q);
+            setTeachers(querySnapshot.docs.map(doc => doc.data()));
+        } catch (err) {
+            setRegError(err instanceof Error ? err.message : 'Registration failed');
+        }
+        setRegLoading(false);
+    }
+
     const renderQuestionsSection = () => (
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-8">
             <div className="bg-white shadow-2xl rounded-2xl overflow-hidden border border-gray-100">
                 <div className="bg-gradient-to-r from-indigo-600 to-blue-500 text-white p-6">
                     <h2 className="text-2xl font-bold">Admission Questions</h2>
                 </div>
-
                 <div className="p-6">
                     {questions.map((q) => (
                         <div
@@ -240,7 +282,7 @@ const AdminDashboard: React.FC = () => {
                             <div className="flex space-x-2">
                                 <button
                                     onClick={() => setSelectedQuestion(q)}
-                                    className="text-indigo Um-600 hover:bg-indigo-100 p-2 rounded-full transition-colors duration-200"
+                                    className="text-indigo-600 hover:bg-indigo-100 p-2 rounded-full transition-colors duration-200"
                                     title="Manage Question"
                                 >
                                     <Eye size={20} />
@@ -257,10 +299,9 @@ const AdminDashboard: React.FC = () => {
                     ))}
                 </div>
             </div>
-
             {/* Question Management Modal */}
             {selectedQuestion && (
-                <div className="fixed inset-0 bg-opacity-60 flex items-center justify-center z-50 p-4 sm:p-6 transition-opacity duration-300">
+                <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 sm:p-6 transition-opacity duration-300">
                     <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 sm:p-8 relative transform transition-all duration-300 scale-100">
                         <button
                             onClick={() => setSelectedQuestion(null)}
@@ -333,20 +374,23 @@ const AdminDashboard: React.FC = () => {
     );
 
     return (
-        <div className="min-h-screen relative w-full bg-gray-50">
-            {/* Hero Section */}
-            <div className="relative h-56 bg-cover bg-center" style={{ backgroundImage: "url('/top_header_bg.jpg')" }}>
-                <div className="w-full h-full bg-indigo-900/80 absolute inset-0" />
-                <div className="absolute left-1/2 transform -translate-x-1/2 -bottom-6">
-                    <div className="bg-white rounded-xl border border-indigo-100/20 px-8 py-4 shadow-xl">
-                        <h1 className="text-2xl md:text-4xl font-bold text-indigo-800">Admin Dashboard</h1>
+        <div className="min-h-screen relative w-full bg-gray-50 pb-16">
+            {/* Dashboard Header */}
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-4">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                        <h1 className="text-3xl md:text-4xl font-bold text-indigo-800 mb-1">Admin Dashboard</h1>
+                        <p className="text-gray-500 text-base md:text-lg">Manage admissions, questions, and teachers in one place</p>
+                    </div>
+                    <div className="flex items-center gap-2 mt-2 md:mt-0">
+                        <span className="inline-flex items-center px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-xs font-semibold">Admin Panel</span>
                     </div>
                 </div>
             </div>
 
             {/* Tabs */}
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 mb-6 pt-12">
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-3 mb-8">
                     <button
                         onClick={() => setActiveTab('entries')}
                         className={`px-6 py-3 rounded-xl font-semibold shadow-sm border transition-all duration-300 text-sm sm:text-base
@@ -367,6 +411,72 @@ const AdminDashboard: React.FC = () => {
                     >
                         Questions
                     </button>
+                    <button
+                        onClick={() => setActiveTab('teachers')}
+                        className={`px-6 py-3 rounded-xl font-semibold shadow-sm border transition-all duration-300 text-sm sm:text-base
+                            ${activeTab === 'teachers'
+                                ? 'bg-indigo-600 text-white border-indigo-600'
+                                : 'bg-white text-indigo-700 border-indigo-200 hover:bg-indigo-50'}
+                        `}
+                    >
+                        Teachers
+                    </button>
+                </div>
+            </div>
+
+            {/* Dashboard Statistics */}
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="bg-white rounded-2xl shadow-lg border border-indigo-100 p-6">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-medium text-gray-600">Total Applications</p>
+                                <p className="text-3xl font-bold text-indigo-600">{admissionEntries.length}</p>
+                            </div>
+                            <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">
+                                <svg className="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="bg-white rounded-2xl shadow-lg border border-emerald-100 p-6">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-medium text-gray-600">Approved</p>
+                                <p className="text-3xl font-bold text-emerald-600">{admissionEntries.filter(e => e.applicationStatus === 'approved').length}</p>
+                            </div>
+                            <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
+                                <CheckCircle className="w-6 h-6 text-emerald-600" />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="bg-white rounded-2xl shadow-lg border border-amber-100 p-6">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-medium text-gray-600">Pending</p>
+                                <p className="text-3xl font-bold text-amber-600">{admissionEntries.filter(e => e.applicationStatus === 'pending').length}</p>
+                            </div>
+                            <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center">
+                                <svg className="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="bg-white rounded-2xl shadow-lg border border-blue-100 p-6">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-medium text-gray-600">Questions</p>
+                                <p className="text-3xl font-bold text-blue-600">{questions.length}</p>
+                            </div>
+                            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -377,59 +487,274 @@ const AdminDashboard: React.FC = () => {
                         <div className="bg-gradient-to-r from-indigo-600 to-blue-500 text-white p-6">
                             <h2 className="text-2xl font-bold">Admission Entries Management</h2>
                         </div>
+                        {/* Responsive Table/Card Section */}
                         {loading ? (
                             <div className="text-center py-12">
-                                <p className="text-indigo-600 text-lg font-medium">Loading entries...</p>
+                                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+                                <p className="text-indigo-600 text-lg font-medium mt-4">Loading entries...</p>
+                            </div>
+                        ) : admissionEntries.length === 0 ? (
+                            <div className="text-center py-12">
+                                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                </div>
+                                <p className="text-gray-500 text-lg">No admission entries yet</p>
+                                <p className="text-gray-400 text-sm">Applications will appear here when submitted</p>
                             </div>
                         ) : (
-                            <div className="overflow-x-auto">
-                                <table className="w-full">
-                                    <thead className="bg-indigo-50">
-                                        <tr>
-                                            {['Name', 'Email', 'Class', 'Stream', 'Status', 'Applied On', 'Actions'].map((header) => (
-                                                <th key={header} className="p-4 text-left text-indigo-700 font-semibold text-sm sm:text-base">
-                                                    {header}
-                                                </th>
-                                            ))}
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {admissionEntries.map((entry) => (
-                                            <tr key={entry.id} className="border-b border-indigo-50 hover:bg-indigo-50/50 transition-colors duration-200">
-                                                <td className="p-4 text-gray-800">{entry.personalInfo?.name || 'N/A'}</td>
-                                                <td className="p-4 text-gray-800">{entry.personalInfo?.email || 'N/A'}</td>
-                                                <td className="p-4 text-gray-800">{entry.programPreferences?.desiredClass || 'N/A'}</td>
-                                                <td className="p-4 text-gray-800">{entry.programPreferences?.stream || 'N/A'}</td>
-                                                <td className="p-4">
-                                                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(entry.applicationStatus)}`}>
-                                                        {entry.applicationStatus}
-                                                    </span>
-                                                </td>
-                                                <td className="p-4 text-gray-800">{formatDate(entry.applicationDate)}</td>
-                                                <td className="p-4">
-                                                    <button
-                                                        onClick={() => openDetailsModal(entry)}
-                                                        className="text-indigo-600 hover:bg-indigo-100 p-2 rounded-full transition-colors duration-200"
-                                                        title="View Details"
-                                                    >
-                                                        <Eye size={20} />
-                                                    </button>
-                                                </td>
+                            <>
+                                {/* Desktop Table View */}
+                                <div className="hidden lg:block overflow-x-auto">
+                                    <table className="w-full">
+                                        <thead className="bg-indigo-50">
+                                            <tr>
+                                                {['Name', 'Email', 'Class', 'Stream', 'Status', 'Applied On', 'Actions'].map((header) => (
+                                                    <th key={header} className="p-4 text-left text-indigo-700 font-semibold text-sm">
+                                                        {header}
+                                                    </th>
+                                                ))}
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
+                                        </thead>
+                                        <tbody>
+                                            {admissionEntries.map((entry) => (
+                                                <tr key={entry.id} className="border-b border-indigo-50 hover:bg-indigo-50/50 transition-colors duration-200">
+                                                    <td className="p-4 text-gray-800">{entry.personalInfo?.name || 'N/A'}</td>
+                                                    <td className="p-4 text-gray-800">{entry.personalInfo?.email || 'N/A'}</td>
+                                                    <td className="p-4 text-gray-800">{entry.programPreferences?.desiredClass || 'N/A'}</td>
+                                                    <td className="p-4 text-gray-800">{entry.programPreferences?.stream || 'N/A'}</td>
+                                                    <td className="p-4">
+                                                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(entry.applicationStatus)}`}>
+                                                            {entry.applicationStatus}
+                                                        </span>
+                                                    </td>
+                                                    <td className="p-4 text-gray-800">{formatDate(entry.applicationDate)}</td>
+                                                    <td className="p-4">
+                                                        <button
+                                                            onClick={() => openDetailsModal(entry)}
+                                                            className="text-indigo-600 hover:bg-indigo-100 p-2 rounded-full transition-colors duration-200"
+                                                            title="View Details"
+                                                        >
+                                                            <Eye size={20} />
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {/* Mobile Card View */}
+                                <div className="lg:hidden space-y-4 p-4">
+                                    {admissionEntries.map((entry) => (
+                                        <div key={entry.id} className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                                            <div className="flex items-start justify-between mb-3">
+                                                <div>
+                                                    <h3 className="font-semibold text-gray-800">{entry.personalInfo?.name || 'N/A'}</h3>
+                                                    <p className="text-sm text-gray-600">{entry.personalInfo?.email || 'N/A'}</p>
+                                                </div>
+                                                <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(entry.applicationStatus)}`}>
+                                                    {entry.applicationStatus}
+                                                </span>
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-3 text-sm mb-3">
+                                                <div>
+                                                    <span className="text-gray-500">Class:</span>
+                                                    <p className="font-medium">{entry.programPreferences?.desiredClass || 'N/A'}</p>
+                                                </div>
+                                                <div>
+                                                    <span className="text-gray-500">Stream:</span>
+                                                    <p className="font-medium">{entry.programPreferences?.stream || 'N/A'}</p>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                                                <span className="text-xs text-gray-500">Applied: {formatDate(entry.applicationDate)}</span>
+                                                <button
+                                                    onClick={() => openDetailsModal(entry)}
+                                                    className="text-indigo-600 hover:bg-indigo-100 p-2 rounded-full transition-colors duration-200"
+                                                    title="View Details"
+                                                >
+                                                    <Eye size={18} />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </>
                         )}
                     </div>
                 </div>
-            ) : (
+            ) : activeTab === 'questions' ? (
                 renderQuestionsSection()
+            ) : (
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+                    {/* Teacher Registration Section */}
+                    <div className="bg-white shadow-2xl rounded-2xl overflow-hidden border border-indigo-100 mb-8">
+                        <div className="bg-gradient-to-r from-emerald-600 to-teal-500 text-white p-6">
+                            <h2 className="text-2xl font-bold">Teacher Management</h2>
+                            <p className="text-emerald-100 mt-2">Register new teachers and view all registered teachers</p>
+                        </div>
+                        <div className="p-8">
+                            <div className="grid lg:grid-cols-2 gap-8">
+                                {/* Registration Form */}
+                                <div>
+                                    <h3 className="text-xl font-bold mb-6 text-emerald-800">Register New Teacher</h3>
+                                    <form onSubmit={handleRegisterTeacher} className="space-y-4">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                                            <input
+                                                type="text"
+                                                placeholder="Enter teacher's full name"
+                                                value={teacherForm.name}
+                                                onChange={e => setTeacherForm(f => ({ ...f, name: e.target.value }))}
+                                                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors duration-200"
+                                                required
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                                            <input
+                                                type="email"
+                                                placeholder="teacher@example.com"
+                                                value={teacherForm.email}
+                                                onChange={e => setTeacherForm(f => ({ ...f, email: e.target.value }))}
+                                                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors duration-200"
+                                                required
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                                            <input
+                                                type="password"
+                                                placeholder="Create a secure password"
+                                                value={teacherForm.password}
+                                                onChange={e => setTeacherForm(f => ({ ...f, password: e.target.value }))}
+                                                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors duration-200"
+                                                required
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                                            <input
+                                                type="text"
+                                                placeholder="+1 (555) 123-4567"
+                                                value={teacherForm.phone}
+                                                onChange={e => setTeacherForm(f => ({ ...f, phone: e.target.value }))}
+                                                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors duration-200"
+                                                required
+                                            />
+                                        </div>
+                                        {regError && (
+                                            <div className="bg-rose-50 border border-rose-200 rounded-xl p-4">
+                                                <p className="text-rose-600 font-medium text-sm">{regError}</p>
+                                            </div>
+                                        )}
+                                        {regSuccess && (
+                                            <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                                                <p className="text-emerald-600 font-medium text-sm">{regSuccess}</p>
+                                            </div>
+                                        )}
+                                        <button
+                                            type="submit"
+                                            disabled={regLoading}
+                                            className="w-full bg-emerald-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-emerald-500 transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed shadow-lg"
+                                        >
+                                            {regLoading ? 'Registering Teacher...' : 'Register Teacher'}
+                                        </button>
+                                    </form>
+                                </div>
+                                {/* Teacher Stats */}
+                                <div>
+                                    <h3 className="text-xl font-bold mb-6 text-emerald-800">Teacher Statistics</h3>
+                                    <div className="grid grid-cols-2 gap-4 mb-6">
+                                        <div className="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-xl border border-emerald-100">
+                                            <div className="text-2xl font-bold text-emerald-600">{teachers.length}</div>
+                                            <div className="text-sm text-emerald-700 font-medium">Total Teachers</div>
+                                        </div>
+                                        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-100">
+                                            <div className="text-2xl font-bold text-blue-600">{teachers.filter(t => t.createdAt && new Date(t.createdAt.seconds * 1000) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)).length}</div>
+                                            <div className="text-sm text-blue-700 font-medium">New This Month</div>
+                                        </div>
+                                    </div>
+                                    {/* Recent Activity */}
+                                    <div className="bg-gray-50 rounded-xl p-4">
+                                        <h4 className="font-semibold text-gray-800 mb-3">Recent Activity</h4>
+                                        <div className="space-y-2">
+                                            {teachers.slice(0, 3).map(teacher => (
+                                                <div key={teacher.uid} className="flex items-center space-x-3 text-sm">
+                                                    <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+                                                    <span className="text-gray-700">{teacher.name} registered</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/* Teachers List */}
+                    <div className="bg-white shadow-2xl rounded-2xl overflow-hidden border border-indigo-100">
+                        <div className="bg-gradient-to-r from-emerald-600 to-teal-500 text-white p-6">
+                            <h3 className="text-xl font-bold">All Registered Teachers</h3>
+                            <p className="text-emerald-100 mt-1">Manage and view all teacher accounts</p>
+                        </div>
+                        <div className="p-6">
+                            {teachers.length === 0 ? (
+                                <div className="text-center py-12">
+                                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+                                        </svg>
+                                    </div>
+                                    <p className="text-gray-500 text-lg">No teachers registered yet</p>
+                                    <p className="text-gray-400 text-sm">Use the form above to register your first teacher</p>
+                                </div>
+                            ) : (
+                                <div className="grid gap-4">
+                                    {teachers.map(teacher => (
+                                        <div key={teacher.uid} className="border border-gray-200 rounded-xl p-6 hover:bg-gray-50 transition-colors duration-200">
+                                            <div className="flex items-start justify-between">
+                                                <div className="flex-1">
+                                                    <div className="flex items-center space-x-3 mb-2">
+                                                        <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
+                                                            <span className="text-emerald-600 font-semibold text-lg">
+                                                                {teacher.name.charAt(0).toUpperCase()}
+                                                            </span>
+                                                        </div>
+                                                        <div>
+                                                            <h4 className="font-semibold text-gray-800">{teacher.name}</h4>
+                                                            <p className="text-sm text-gray-500">{teacher.email}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="grid grid-cols-2 gap-4 mt-4">
+                                                        <div>
+                                                            <span className="text-xs text-gray-500 uppercase tracking-wide">Teacher ID</span>
+                                                            <p className="font-mono text-sm text-emerald-600 font-medium">{teacher.teacherId}</p>
+                                                        </div>
+                                                        <div>
+                                                            <span className="text-xs text-gray-500 uppercase tracking-wide">Phone</span>
+                                                            <p className="text-sm text-gray-700">{teacher.phone}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center space-x-2">
+                                                    <span className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-xs font-medium">
+                                                        Active
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
             )}
 
             {/* Details Modal */}
             {selectedEntry && (
-                <div className="fixed inset-0 bg-opacity-60 flex items-center justify-center z-50 p-4 sm:p-6 transition-opacity duration-300">
+                <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 sm:p-6 transition-opacity duration-300">
                     <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full p-6 sm:p-8 relative max-h-[90vh] overflow-y-auto border border-indigo-100 transform transition-all duration-300 scale-100">
                         <button
                             onClick={closeDetailsModal}
@@ -633,7 +958,7 @@ const AdminDashboard: React.FC = () => {
 
             {/* Document Viewer Modal */}
             {documentViewer && (
-                <div className="fixed inset-0 bg-opacity-60 flex items-center justify-center z-50 p-4 sm:p-6 transition-opacity duration-300">
+                <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 sm:p-6 transition-opacity duration-300">
                     <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl p-6 sm:p-8 relative border border-indigo-100 transform transition-all duration-300 scale-100">
                         <button
                             onClick={() => setDocumentViewer(null)}
