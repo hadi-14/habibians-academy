@@ -1,6 +1,6 @@
 'use client';
-import { useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useState, useEffect } from 'react';
+import { signInWithEmailAndPassword, browserLocalPersistence, setPersistence, onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from '@/firebase/config';
 import { doc, getDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
@@ -11,12 +11,32 @@ export default function TeacherLogin() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const router = useRouter();
+    const [redirecting, setRedirecting] = useState(false);
+
+    // Fast redirect before rendering form (no conditional hook call)
+    useEffect(() => {
+        if (typeof window !== 'undefined' && localStorage.getItem('teacher_logged_in') === 'true') {
+            setRedirecting(true);
+            router.push('/teacher-portal');
+        }
+    }, [router]);
+
+    // Auto-redirect if already logged in and session is saved
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user && localStorage.getItem('teacher_logged_in') === 'true') {
+                router.push('/teacher-portal');
+            }
+        });
+        return () => unsubscribe();
+    }, [router]);
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         setError('');
         setLoading(true);
         try {
+            await setPersistence(auth, browserLocalPersistence);
             const userCred = await signInWithEmailAndPassword(auth, email, password);
             // Check teacher profile in 'teachers' collection
             const teacherRef = doc(db, 'teachers', userCred.user.uid);
@@ -26,6 +46,8 @@ export default function TeacherLogin() {
                 setLoading(false);
                 return;
             }
+            // Save login state to browser for persistence
+            localStorage.setItem('teacher_logged_in', 'true');
             router.push('/teacher-portal');
         } catch (err) {
             const errorMsg = (err instanceof Error) ? err.message : 'Login failed';
@@ -33,6 +55,8 @@ export default function TeacherLogin() {
             setLoading(false);
         }
     }
+
+    if (redirecting) return null;
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-6">

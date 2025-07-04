@@ -13,9 +13,8 @@ import {
 } from 'firebase/firestore';
 import { db, storage, auth } from '@/firebase/config';
 import Image from "next/image";
-import { getDownloadURL, ref } from 'firebase/storage';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { getUsersByRole } from '@/firebase/users';
 
 // Interfaces for type safety
 interface PersonalInfo {
@@ -77,15 +76,29 @@ const AdminDashboard: React.FC = () => {
     const [regError, setRegError] = useState('');
     const [regSuccess, setRegSuccess] = useState('');
     const [regLoading, setRegLoading] = useState(false);
+    const [editingTeacher, setEditingTeacher] = useState<Teacher | null>(null);
+    const [editTeacherForm, setEditTeacherForm] = useState({ name: '', email: '', phone: '', subjects: [] as string[] });
+    const [editTeacherPhoto, setEditTeacherPhoto] = useState<File | null>(null);
+    const [editLoading, setEditLoading] = useState(false);
+    const [editError, setEditError] = useState('');
+    const [editSuccess, setEditSuccess] = useState('');
+    const [showAddTeacherModal, setShowAddTeacherModal] = useState(false);
+    const SUBJECTS = [
+        "Mathematics", "Physics", "Chemistry", "Biology", "English", "History", "Geography", "Computer Science", "Economics", "Other"
+    ];
+    const [teacherPhoto, setTeacherPhoto] = useState<File | null>(null);
+    const [teacherSubjects, setTeacherSubjects] = useState<string[]>([]);
     interface Teacher {
         uid: string;
         name: string;
         email: string;
         teacherId: string;
         phone: string;
+        subjects: string[];
+        photoURL?: string;
         createdAt?: { seconds: number; nanoseconds: number } | Date;
     }
-    
+
     const [teachers, setTeachers] = useState<Teacher[]>([]);
 
     // Fetch admission entries
@@ -140,26 +153,12 @@ const AdminDashboard: React.FC = () => {
 
     // Fetch teachers
     useEffect(() => {
-        getUsersByRole('teacher').then((users) => {
-            // Ensure all required Teacher fields are present
-            setTeachers(
-                users.map((u: {
-                    uid: string;
-                    name?: string;
-                    email?: string;
-                    teacherId?: string;
-                    phone?: string;
-                    createdAt?: { seconds: number; nanoseconds: number } | Date;
-                }) => ({
-                    uid: u.uid,
-                    name: u.name ?? '',
-                    email: u.email ?? '',
-                    teacherId: u.teacherId ?? '',
-                    phone: u.phone ?? '',
-                    createdAt: u.createdAt,
-                }))
-            );
-        });
+        const fetchTeachers = async () => {
+            const q = query(collection(db, 'teachers'), orderBy('createdAt', 'desc'));
+            const querySnapshot = await getDocs(q);
+            setTeachers(querySnapshot.docs.map(doc => ({ uid: doc.id, ...doc.data() } as Teacher)));
+        };
+        fetchTeachers();
     }, []);
 
     // Utility functions
@@ -258,19 +257,28 @@ const AdminDashboard: React.FC = () => {
         setRegLoading(true);
         try {
             const userCred = await createUserWithEmailAndPassword(auth, teacherForm.email, teacherForm.password);
-            // Assign teacherId automatically (e.g., use UID or a prefix)
             const teacherId = `T-${userCred.user.uid.slice(0, 8).toUpperCase()}`;
-            // Add teacher to 'teachers' collection instead of 'users'
+            let photoURL = '';
+            if (teacherPhoto) {
+                const storage = getStorage();
+                const fileRef = ref(storage, `teacher-photos/${userCred.user.uid}-${teacherPhoto.name}`);
+                await uploadBytes(fileRef, teacherPhoto);
+                photoURL = await getDownloadURL(fileRef);
+            }
             await setDoc(doc(db, 'teachers', userCred.user.uid), {
                 name: teacherForm.name,
                 email: teacherForm.email,
                 teacherId,
                 phone: teacherForm.phone,
+                subjects: teacherSubjects,
+                photoURL,
                 createdAt: new Date(),
                 uid: userCred.user.uid
             });
             setRegSuccess('Teacher registered!');
             setTeacherForm({ name: '', email: '', password: '', phone: '' });
+            setTeacherPhoto(null);
+            setTeacherSubjects([]);
             // Fetch teachers from 'teachers' collection
             const q = query(collection(db, 'teachers'), orderBy('createdAt', 'desc'));
             const querySnapshot = await getDocs(q);
@@ -280,6 +288,65 @@ const AdminDashboard: React.FC = () => {
         }
         setRegLoading(false);
     }
+
+    const handleEditTeacher = (teacher: Teacher) => {
+        setEditingTeacher(teacher);
+        setEditTeacherForm({
+            name: teacher.name,
+            email: teacher.email,
+            phone: teacher.phone,
+            subjects: teacher.subjects || [],
+        });
+        setEditTeacherPhoto(null);
+        setEditError('');
+        setEditSuccess('');
+    };
+
+    async function handleUpdateTeacher(e: React.FormEvent) {
+        e.preventDefault();
+        if (!editingTeacher) return;
+        setEditLoading(true);
+        setEditError('');
+        setEditSuccess('');
+        try {
+            let photoURL = editingTeacher.photoURL || '';
+            if (editTeacherPhoto) {
+                const storage = getStorage();
+                const fileRef = ref(storage, `teacher-photos/${editingTeacher.uid}-${editTeacherPhoto.name}`);
+                await uploadBytes(fileRef, editTeacherPhoto);
+                photoURL = await getDownloadURL(fileRef);
+            }
+            await setDoc(doc(db, 'teachers', editingTeacher.uid), {
+                ...editingTeacher,
+                name: editTeacherForm.name,
+                email: editTeacherForm.email,
+                phone: editTeacherForm.phone,
+                subjects: editTeacherForm.subjects,
+                photoURL,
+            }, { merge: true });
+            setEditSuccess('Teacher updated!');
+            // Refresh teachers list
+            const q = query(collection(db, 'teachers'), orderBy('createdAt', 'desc'));
+            const querySnapshot = await getDocs(q);
+            setTeachers(querySnapshot.docs.map(doc => ({ uid: doc.id, ...doc.data() } as Teacher)));
+            setEditingTeacher(null);
+        } catch (err) {
+            setEditError(err instanceof Error ? err.message : 'Update failed');
+        }
+        setEditLoading(false);
+    }
+
+    // Remove teacher function
+    const removeTeacher = async (teacherUid: string) => {
+        if (!window.confirm('Are you sure you want to remove this teacher?')) return;
+        try {
+            await deleteDoc(doc(db, 'teachers', teacherUid));
+            setTeachers(teachers.filter(t => t.uid !== teacherUid));
+        } catch (error) {
+            alert('Failed to remove teacher.');
+            console.error(error);
+        }
+    };
 
     const renderQuestionsSection = () => (
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-8">
@@ -624,72 +691,14 @@ const AdminDashboard: React.FC = () => {
                         </div>
                         <div className="p-8">
                             <div className="grid lg:grid-cols-2 gap-8">
-                                {/* Registration Form */}
+                                {/* Add Teacher Button */}
                                 <div>
-                                    <h3 className="text-xl font-bold mb-6 text-emerald-800">Register New Teacher</h3>
-                                    <form onSubmit={handleRegisterTeacher} className="space-y-4">
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-                                            <input
-                                                type="text"
-                                                placeholder="Enter teacher's full name"
-                                                value={teacherForm.name}
-                                                onChange={e => setTeacherForm(f => ({ ...f, name: e.target.value }))}
-                                                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors duration-200"
-                                                required
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                                            <input
-                                                type="email"
-                                                placeholder="teacher@example.com"
-                                                value={teacherForm.email}
-                                                onChange={e => setTeacherForm(f => ({ ...f, email: e.target.value }))}
-                                                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors duration-200"
-                                                required
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
-                                            <input
-                                                type="password"
-                                                placeholder="Create a secure password"
-                                                value={teacherForm.password}
-                                                onChange={e => setTeacherForm(f => ({ ...f, password: e.target.value }))}
-                                                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors duration-200"
-                                                required
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
-                                            <input
-                                                type="text"
-                                                placeholder="+1 (555) 123-4567"
-                                                value={teacherForm.phone}
-                                                onChange={e => setTeacherForm(f => ({ ...f, phone: e.target.value }))}
-                                                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors duration-200"
-                                                required
-                                            />
-                                        </div>
-                                        {regError && (
-                                            <div className="bg-rose-50 border border-rose-200 rounded-xl p-4">
-                                                <p className="text-rose-600 font-medium text-sm">{regError}</p>
-                                            </div>
-                                        )}
-                                        {regSuccess && (
-                                            <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
-                                                <p className="text-emerald-600 font-medium text-sm">{regSuccess}</p>
-                                            </div>
-                                        )}
-                                        <button
-                                            type="submit"
-                                            disabled={regLoading}
-                                            className="w-full bg-emerald-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-emerald-500 transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed shadow-lg"
-                                        >
-                                            {regLoading ? 'Registering Teacher...' : 'Register Teacher'}
-                                        </button>
-                                    </form>
+                                    <button
+                                        className="bg-emerald-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-emerald-500 transition-colors duration-200 shadow-lg mb-6"
+                                        onClick={() => setShowAddTeacherModal(true)}
+                                    >
+                                        + Add Teacher
+                                    </button>
                                 </div>
                                 {/* Teacher Stats */}
                                 <div>
@@ -759,11 +768,15 @@ const AdminDashboard: React.FC = () => {
                                             <div className="flex items-start justify-between">
                                                 <div className="flex-1">
                                                     <div className="flex items-center space-x-3 mb-2">
-                                                        <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
-                                                            <span className="text-emerald-600 font-semibold text-lg">
-                                                                {teacher.name.charAt(0).toUpperCase()}
-                                                            </span>
-                                                        </div>
+                                                        {teacher.photoURL ? (
+                                                            <Image src={teacher.photoURL} alt={teacher.name} width={40} height={40} className="w-10 h-10 rounded-full object-cover border border-emerald-200" />
+                                                        ) : (
+                                                            <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
+                                                                <span className="text-emerald-600 font-semibold text-lg">
+                                                                    {teacher.name.charAt(0).toUpperCase()}
+                                                                </span>
+                                                            </div>
+                                                        )}
                                                         <div>
                                                             <h4 className="font-semibold text-gray-800">{teacher.name}</h4>
                                                             <p className="text-sm text-gray-500">{teacher.email}</p>
@@ -779,11 +792,26 @@ const AdminDashboard: React.FC = () => {
                                                             <p className="text-sm text-gray-700">{teacher.phone}</p>
                                                         </div>
                                                     </div>
+                                                    <div className="mt-2">
+                                                        <span className="text-xs text-gray-500 uppercase tracking-wide">Subjects</span>
+                                                        <p className="text-sm text-gray-700">{Array.isArray(teacher.subjects) ? teacher.subjects.join(', ') : ''}</p>
+                                                    </div>
                                                 </div>
                                                 <div className="flex items-center space-x-2">
-                                                    <span className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-xs font-medium">
-                                                        Active
-                                                    </span>
+                                                    <button
+                                                        className="text-blue-600 hover:bg-blue-100 p-2 rounded-full transition-colors duration-200"
+                                                        title="Edit Teacher"
+                                                        onClick={() => handleEditTeacher(teacher)}
+                                                    >
+                                                        Edit
+                                                    </button>
+                                                    <button
+                                                        className="text-rose-600 hover:bg-rose-100 p-2 rounded-full transition-colors duration-200"
+                                                        title="Remove Teacher"
+                                                        onClick={() => removeTeacher(teacher.uid)}
+                                                    >
+                                                        Remove
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -798,7 +826,7 @@ const AdminDashboard: React.FC = () => {
             {/* Details Modal */}
             {selectedEntry && (
                 <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 sm:p-6 transition-opacity duration-300">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full p-6 sm:p-8 relative max-h-[90vh] overflow-y-auto border border-indigo-100 transform transition-all duration-300 scale-100">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full p-6 sm:p-8 relative max-h-[70vh] overflow-y-auto border border-indigo-100 transform transition-all duration-300 scale-100">
                         <button
                             onClick={closeDetailsModal}
                             className="absolute top-4 right-4 text-indigo-600 hover:text-indigo-800 transition-colors duration-200"
@@ -1031,6 +1059,215 @@ const AdminDashboard: React.FC = () => {
                     </div>
                 </div>
             )}
+
+            {/* Edit Teacher Modal */}
+            {editingTeacher && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 transition-opacity duration-300 backdrop-blur-sm">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 sm:p-8 relative border border-indigo-100 max-h-[70vh] overflow-y-auto animate-fadeIn">
+                        <button
+                            onClick={() => setEditingTeacher(null)}
+                            className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 transition-colors duration-200 text-2xl font-bold"
+                            aria-label="Close"
+                        >
+                            &times;
+                        </button>
+                        <h2 className="text-2xl font-bold mb-6 text-indigo-800 border-b border-indigo-100 pb-3">Edit Teacher</h2>
+                        <form onSubmit={handleUpdateTeacher} className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                                <input
+                                    type="text"
+                                    value={editTeacherForm.name}
+                                    onChange={e => setEditTeacherForm(f => ({ ...f, name: e.target.value }))}
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors duration-200"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                <input
+                                    type="email"
+                                    value={editTeacherForm.email}
+                                    onChange={e => setEditTeacherForm(f => ({ ...f, email: e.target.value }))}
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors duration-200"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+                                <input
+                                    type="text"
+                                    value={editTeacherForm.phone}
+                                    onChange={e => setEditTeacherForm(f => ({ ...f, phone: e.target.value }))}
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors duration-200"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Subjects</label>
+                                <div className="flex flex-wrap gap-2">
+                                    {SUBJECTS.map(subj => (
+                                        <label key={subj} className="flex items-center gap-2 text-sm font-medium text-gray-700 bg-indigo-50 px-3 py-1 rounded-lg cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                checked={editTeacherForm.subjects.includes(subj)}
+                                                onChange={e => {
+                                                    if (e.target.checked) {
+                                                        setEditTeacherForm(f => ({ ...f, subjects: [...f.subjects, subj] }));
+                                                    } else {
+                                                        setEditTeacherForm(f => ({ ...f, subjects: f.subjects.filter(s => s !== subj) }));
+                                                    }
+                                                }}
+                                            />
+                                            {subj}
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Profile Photo</label>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={e => setEditTeacherPhoto(e.target.files?.[0] || null)}
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors duration-200"
+                                />
+                                {editTeacherPhoto && <span className="text-xs text-gray-500 mt-1 block">Selected: {editTeacherPhoto.name}</span>}
+                            </div>
+                            {editError && <div className="bg-rose-50 border border-rose-200 rounded-xl p-4"><p className="text-rose-600 font-medium text-sm">{editError}</p></div>}
+                            {editSuccess && <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4"><p className="text-emerald-600 font-medium text-sm">{editSuccess}</p></div>}
+                            <button
+                                type="submit"
+                                disabled={editLoading}
+                                className="w-full bg-indigo-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-indigo-500 transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed shadow-lg"
+                            >
+                                {editLoading ? 'Updating...' : 'Update Teacher'}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Add Teacher Modal */}
+            {showAddTeacherModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 transition-opacity duration-300 backdrop-blur-sm">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 sm:p-8 relative border border-emerald-100 max-h-[70vh] overflow-y-auto animate-fadeIn">
+                        <button
+                            onClick={() => setShowAddTeacherModal(false)}
+                            className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 transition-colors duration-200 text-2xl font-bold"
+                            aria-label="Close"
+                        >
+                            &times;
+                        </button>
+                        <h3 className="text-xl font-bold mb-6 text-emerald-800">Register New Teacher</h3>
+                        <form onSubmit={handleRegisterTeacher} className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                                <input
+                                    type="text"
+                                    placeholder="Enter teacher's full name"
+                                    value={teacherForm.name}
+                                    onChange={e => setTeacherForm(f => ({ ...f, name: e.target.value }))}
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors duration-200"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                                <input
+                                    type="email"
+                                    placeholder="teacher@example.com"
+                                    value={teacherForm.email}
+                                    onChange={e => setTeacherForm(f => ({ ...f, email: e.target.value }))}
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors duration-200"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                                <input
+                                    type="password"
+                                    placeholder="Create a secure password"
+                                    value={teacherForm.password}
+                                    onChange={e => setTeacherForm(f => ({ ...f, password: e.target.value }))}
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors duration-200"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                                <input
+                                    type="text"
+                                    placeholder="+1 (555) 123-4567"
+                                    value={teacherForm.phone}
+                                    onChange={e => setTeacherForm(f => ({ ...f, phone: e.target.value }))}
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors duration-200"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Subjects</label>
+                                <div className="flex flex-wrap gap-2">
+                                    {SUBJECTS.map(subj => (
+                                        <label key={subj} className="flex items-center gap-2 text-sm font-medium text-gray-700 bg-emerald-50 px-3 py-1 rounded-lg cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                checked={teacherSubjects.includes(subj)}
+                                                onChange={e => {
+                                                    if (e.target.checked) {
+                                                        setTeacherSubjects([...teacherSubjects, subj]);
+                                                    } else {
+                                                        setTeacherSubjects(teacherSubjects.filter(s => s !== subj));
+                                                    }
+                                                }}
+                                            />
+                                            {subj}
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Profile Photo</label>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={e => setTeacherPhoto(e.target.files?.[0] || null)}
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors duration-200"
+                                />
+                                {teacherPhoto && <span className="text-xs text-gray-500 mt-1 block">Selected: {teacherPhoto.name}</span>}
+                            </div>
+                            {regError && (
+                                <div className="bg-rose-50 border border-rose-200 rounded-xl p-4">
+                                    <p className="text-rose-600 font-medium text-sm">{regError}</p>
+                                </div>
+                            )}
+                            {regSuccess && (
+                                <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                                    <p className="text-emerald-600 font-medium text-sm">{regSuccess}</p>
+                                </div>
+                            )}
+                            <button
+                                type="submit"
+                                disabled={regLoading}
+                                className="w-full bg-emerald-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-emerald-500 transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed shadow-lg"
+                            >
+                                {regLoading ? 'Registering Teacher...' : 'Register Teacher'}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
+            {/* Add fadeIn animation for modal */
+}
+<style jsx global>{`
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.25s ease;
+}
+`}</style>
         </div>
     );
 };

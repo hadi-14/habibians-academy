@@ -15,6 +15,8 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import Image from "next/image";
 import type { Assignment as FirebaseAssignment, Class as FirebaseClass, Teacher as FirebaseTeacher } from '@/firebase/teacher-portal';
+import { useProtectedRoute } from './useProtectedRoute';
+import { signOut } from 'firebase/auth';
 
 // Extend Firebase types for UI needs
 interface UIAssignment extends FirebaseAssignment {
@@ -25,6 +27,8 @@ interface UIAssignment extends FirebaseAssignment {
 }
 
 export default function TeacherPortalDashboard() {
+    useProtectedRoute();
+
     const [activeTab, setActiveTab] = useState('dashboard');
     const [assignments, setAssignments] = useState<UIAssignment[]>([]);
     const [classes, setClasses] = useState<FirebaseClass[]>([]);
@@ -904,6 +908,13 @@ export default function TeacherPortalDashboard() {
         </div>
     );
 
+    // Logout handler
+    const handleLogout = async () => {
+        await signOut(auth);
+        localStorage.removeItem('teacher_logged_in');
+        window.location.href = '/teacher-portal/login';
+    };
+
     if (loading && !teacher) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
@@ -917,55 +928,87 @@ export default function TeacherPortalDashboard() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+            {/* Hero Section - Beautiful Top Bar */}
+            <section className="relative h-32 md:h-40 flex items-center justify-center overflow-hidden mb-6">
+                <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-blue-800 to-purple-900"></div>
+                <div className="absolute inset-0 bg-black/20"></div>
+                <div className="relative z-10 flex items-center justify-between w-full max-w-7xl px-6 mx-auto">
+                    <div className="flex items-center gap-4">
+                        <div className="w-16 h-16 rounded-full border-3 border-white/90 overflow-hidden shadow-xl backdrop-blur-sm">
+                            <div className="w-full h-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center">
+                                <span className="text-white text-lg font-bold">
+                                    {teacher?.name ? teacher.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'TP'}
+                                </span>
+                            </div>
+                        </div>
+                        <div>
+                            <h1 className="text-2xl md:text-3xl font-bold text-white drop-shadow-lg">Welcome Back{teacher?.name ? `, ${teacher.name.split(' ')[0]}` : ''}!</h1>
+                            <p className="text-white/90 text-sm">Teacher Portal Dashboard</p>
+                        </div>
+                    </div>
+                    <button
+                        onClick={handleLogout}
+                        className="px-6 py-2 bg-white/20 backdrop-blur-md text-white font-medium rounded-full border border-white/30 hover:bg-white/30 transition-all duration-300 shadow-lg text-sm"
+                    >
+                        Logout
+                    </button>
+                </div>
+            </section>
+
             {success && <MessageAlert type="success" message={success} onClose={() => setSuccess('')} />}
 
-            <div className="container mx-auto px-4 py-8">
-                <div className="mb-8">
-                    <h1 className="text-4xl font-bold text-gray-800 mb-2">Teacher Portal</h1>
-                    <p className="text-gray-600">Welcome back, {teacher?.name}! Manage your classes, assignments, and students</p>
-                </div>
-
-                <div className="flex flex-wrap gap-2 mb-8">
-                    <button
-                        onClick={() => setActiveTab('dashboard')}
-                        className={`px-6 py-3 rounded-lg font-medium transition-colors ${activeTab === 'dashboard'
-                            ? 'bg-blue-600 text-white shadow-lg'
-                            : 'bg-white text-gray-700 hover:bg-gray-50'
-                            }`}
-                    >
-                        <BookOpen className="w-4 h-4 inline mr-2" />
-                        Dashboard
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('assignments')}
-                        className={`px-6 py-3 rounded-lg font-medium transition-colors ${activeTab === 'assignments'
-                            ? 'bg-blue-600 text-white shadow-lg'
-                            : 'bg-white text-gray-700 hover:bg-gray-50'
-                            }`}
-                    >
-                        <FileText className="w-4 h-4 inline mr-2" />
-                        Assignments ({assignments.length})
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('classes')}
-                        className={`px-6 py-3 rounded-lg font-medium transition-colors ${activeTab === 'classes'
-                            ? 'bg-blue-600 text-white shadow-lg'
-                            : 'bg-white text-gray-700 hover:bg-gray-50'
-                            }`}
-                    >
-                        <Users className="w-4 h-4 inline mr-2" />
-                        Classes ({classes.length})
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('settings')}
-                        className={`px-6 py-3 rounded-lg font-medium transition-colors ${activeTab === 'settings'
-                            ? 'bg-blue-600 text-white shadow-lg'
-                            : 'bg-white text-gray-700 hover:bg-gray-50'
-                            }`}
-                    >
-                        <Settings className="w-4 h-4 inline mr-2" />
-                        Settings
-                    </button>
+            <div className="container mx-auto px-4 pb-8">
+                <div className="flex justify-center mb-8">
+                    <div className="flex flex-wrap gap-2 px-2 py-2 rounded-2xl bg-white/30 backdrop-blur-md border border-white/40 shadow-lg mx-auto relative w-full">
+                        <button
+                            onClick={() => setActiveTab('dashboard')}
+                            className={`flex items-center gap-2 px-6 py-3 rounded-full font-semibold transition-all duration-200 text-base focus:outline-none
+                            ${activeTab === 'dashboard'
+                                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-xl scale-105 border-2 border-blue-400'
+                                    : 'bg-white/60 text-gray-700 hover:bg-blue-50/80 border border-transparent'}
+                        `}
+                            style={{ boxShadow: activeTab === 'dashboard' ? '0 4px 24px 0 rgba(59,130,246,0.15)' : undefined }}
+                        >
+                            <BookOpen className="w-5 h-5 inline mr-2" />
+                            Dashboard
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('assignments')}
+                            className={`flex items-center gap-2 px-6 py-3 rounded-full font-semibold transition-all duration-200 text-base focus:outline-none
+                            ${activeTab === 'assignments'
+                                    ? 'bg-gradient-to-r from-green-500 to-blue-500 text-white shadow-xl scale-105 border-2 border-green-400'
+                                    : 'bg-white/60 text-gray-700 hover:bg-green-50/80 border border-transparent'}
+                        `}
+                            style={{ boxShadow: activeTab === 'assignments' ? '0 4px 24px 0 rgba(16,185,129,0.15)' : undefined }}
+                        >
+                            <FileText className="w-5 h-5 inline mr-2" />
+                            Assignments ({assignments.length})
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('classes')}
+                            className={`flex items-center gap-2 px-6 py-3 rounded-full font-semibold transition-all duration-200 text-base focus:outline-none
+                            ${activeTab === 'classes'
+                                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-xl scale-105 border-2 border-purple-400'
+                                    : 'bg-white/60 text-gray-700 hover:bg-purple-50/80 border border-transparent'}
+                        `}
+                            style={{ boxShadow: activeTab === 'classes' ? '0 4px 24px 0 rgba(168,85,247,0.15)' : undefined }}
+                        >
+                            <Users className="w-5 h-5 inline mr-2" />
+                            Classes ({classes.length})
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('settings')}
+                            className={`flex items-center gap-2 px-6 py-3 rounded-full font-semibold transition-all duration-200 text-base focus:outline-none
+                            ${activeTab === 'settings'
+                                    ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-xl scale-105 border-2 border-yellow-400'
+                                    : 'bg-white/60 text-gray-700 hover:bg-yellow-50/80 border border-transparent'}
+                        `}
+                            style={{ boxShadow: activeTab === 'settings' ? '0 4px 24px 0 rgba(251,191,36,0.15)' : undefined }}
+                        >
+                            <Settings className="w-5 h-5 inline mr-2" />
+                            Settings
+                        </button>
+                    </div>
                 </div>
 
                 <div className="mb-8">
