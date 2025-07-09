@@ -163,7 +163,7 @@ export default function Home() {
               <div className="flex-1 flex items-center justify-center w-full max-w-lg">
                 <div className="relative w-full aspect-video rounded-xl overflow-hidden shadow-lg ring-4 ring-accent-lightblue ring-offset-4 ring-offset-blue-50 transition-all duration-500 hover:scale-105 hover:ring-accent-navy group bg-white flex items-center justify-center">
                   <Image
-                    src="/founder.jpg"
+                    src="/Faculty/founder.jpg"
                     alt="Founder Image"
                     width={400}
                     height={225}
