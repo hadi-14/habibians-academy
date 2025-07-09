@@ -68,7 +68,7 @@ export default function Home() {
                   <div className="relative w-full max-w-md aspect-video rounded-xl overflow-hidden shadow-lg ring-4 ring-accent-lightblue ring-offset-4 ring-offset-primary-silver transition-all duration-500 hover:scale-105 hover:ring-accent-navy group">
                     <iframe
                       className="w-full h-full group-hover:shadow-2xl group-hover:brightness-110 transition-all duration-500"
-                      src="https://www.youtube.com/embed/dQw4w9WgXcQ "
+                      src="https://www.youtube.com/embed/AX5YVfVUHOs"
                       title="Intro Video"
                       frameBorder="0"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -102,7 +102,7 @@ export default function Home() {
             </div>
             <span className="hidden sm:inline-block w-px h-8 bg-primary-white opacity-30 delay-300"></span>
             <div className="flex flex-col items-center flex-1 min-w-[120px] animate-bounce-slow delay-300">
-              <AnimatedCounter target={3} duration={900} className="text-xl sm:text-2xl md:text-3xl font-heading font-bold" suffix=" Years+" />
+              <AnimatedCounter target={11} duration={900} className="text-xl sm:text-2xl md:text-3xl font-heading font-bold" suffix=" Years+" />
               <span className="text-xs sm:text-sm md:text-base opacity-80">Experience</span>
             </div>
           </div>
@@ -161,15 +161,15 @@ export default function Home() {
                 <div className="mt-2 font-heading font-bold text-accent-navy">- Sir Abdul Samad, Founder & Educationist</div>
               </div>
               <div className="flex-1 flex items-center justify-center w-full max-w-lg">
-                <div className="relative w-full aspect-video rounded-xl overflow-hidden shadow-lg ring-4 ring-accent-lightblue ring-offset-4 ring-offset-blue-50 transition-all duration-500 hover:scale-105 hover:ring-accent-navy group">
-                  <iframe
-                    className="w-full h-full group-hover:shadow-2xl group-hover:brightness-110 transition-all duration-500"
-                    src="https://www.youtube.com/embed/2vjPBrBU-TM"
-                    title="Founder Message"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
+                <div className="relative w-full aspect-video rounded-xl overflow-hidden shadow-lg ring-4 ring-accent-lightblue ring-offset-4 ring-offset-blue-50 transition-all duration-500 hover:scale-105 hover:ring-accent-navy group bg-white flex items-center justify-center">
+                  <Image
+                    src="/founder.jpg"
+                    alt="Founder Image"
+                    width={400}
+                    height={225}
+                    className="object-cover w-full h-full group-hover:shadow-2xl group-hover:brightness-110 transition-all duration-500"
+                    priority
+                  />
                   <span className="absolute inset-0 rounded-xl ring-4 ring-accent-lightblue opacity-40 animate-pulse pointer-events-none"></span>
                 </div>
               </div>
@@ -223,28 +223,13 @@ export default function Home() {
               {/* Science Group */}
               <div className="flex-1 flex flex-col items-center bg-primary-white/80 rounded-xl shadow-lg p-4 sm:p-6 border-2 border-accent-lightblue mb-4 md:mb-0">
                 <div className="w-20 h-20 sm:w-28 sm:h-28 mb-4 rounded-full overflow-hidden border-4 border-accent-navy bg-primary-silver flex items-center justify-center">
-                  <Image src="/affiliates/science-group.jpg" alt="Science Group" width={80} height={80} className="object-cover w-full h-full sm:w-[100px] sm:h-[100px]" />
+                  <Image src="/affiliates/science-group.png" alt="Science Group" width={80} height={80} className="object-cover w-full h-full sm:w-[100px] sm:h-[100px]" />
                 </div>
                 <h3 className="text-base sm:text-lg md:text-xl font-heading font-bold text-primary-blue mb-2">Pre-Medical</h3>
-                <ul className="text-primary-blue/80 font-body text-xs sm:text-sm md:text-base mb-2 list-disc list-inside">
+                <ul className="text-primary-blue/80 font-body text-xs sm:text-sm md:text-base mb-2 list-disc list-inside h-24">
                   <li>Biology</li>
                   <li>Chemistry</li>
                   <li>Physics</li>
-                  <li>Mathematics</li>
-                </ul>
-                <div className="text-xs sm:text-sm font-body text-accent-navy mt-2">Board: AKU-EB</div>
-              </div>
-              {/* Commerce Group */}
-              <div className="flex-1 flex flex-col items-center bg-primary-white/80 rounded-xl shadow-lg p-4 sm:p-6 border-2 border-accent-lightblue mb-4 md:mb-0">
-                <div className="w-20 h-20 sm:w-28 sm:h-28 mb-4 rounded-full overflow-hidden border-4 border-accent-navy bg-primary-silver flex items-center justify-center">
-                  <Image src="/affiliates/commerce-group.png" alt="Commerce Group" width={80} height={80} className="object-cover w-full h-full sm:w-[100px] sm:h-[100px]" />
-                </div>
-                <h3 className="text-base sm:text-lg md:text-xl font-heading font-bold text-primary-blue mb-2">Commerce</h3>
-                <ul className="text-primary-blue/80 font-body text-xs sm:text-sm md:text-base mb-2 list-disc list-inside">
-                  <li>Accounting</li>
-                  <li>Business Math</li>
-                  <li>Economics</li>
-                  <li>Principles of Commerce</li>
                 </ul>
                 <div className="text-xs sm:text-sm font-body text-accent-navy mt-2">Board: AKU-EB</div>
               </div>
@@ -254,11 +239,24 @@ export default function Home() {
                   <Image src="/affiliates/engineering-group.png" alt="Pre-Engineering Group" width={80} height={80} className="object-cover w-full h-full sm:w-[100px] sm:h-[100px]" />
                 </div>
                 <h3 className="text-base sm:text-lg md:text-xl font-heading font-bold text-primary-blue mb-2">Pre-Engineering</h3>
-                <ul className="text-primary-blue/80 font-body text-xs sm:text-sm md:text-base mb-2 list-disc list-inside">
+                <ul className="text-primary-blue/80 font-body text-xs sm:text-sm md:text-base mb-2 list-disc list-inside h-24">
                   <li>Mathematics</li>
                   <li>Physics</li>
                   <li>Chemistry</li>
-                  <li>Computer Science</li>
+                </ul>
+                <div className="text-xs sm:text-sm font-body text-accent-navy mt-2">Board: AKU-EB</div>
+              </div>
+              {/* Commerce Group */}
+              <div className="flex-1 flex flex-col items-center bg-primary-white/80 rounded-xl shadow-lg p-4 sm:p-6 border-2 border-accent-lightblue mb-4 md:mb-0">
+                <div className="w-20 h-20 sm:w-28 sm:h-28 mb-4 rounded-full overflow-hidden border-4 border-accent-navy bg-primary-silver flex items-center justify-center">
+                  <Image src="/affiliates/commerce-group.png" alt="Commerce Group" width={80} height={80} className="object-cover w-full h-full sm:w-[100px] sm:h-[100px]" />
+                </div>
+                <h3 className="text-base sm:text-lg md:text-xl font-heading font-bold text-primary-blue mb-2">Commerce</h3>
+                <ul className="text-primary-blue/80 font-body text-xs sm:text-sm md:text-base mb-2 list-disc list-inside h-24">
+                  <li>Accounting</li>
+                  <li>Business Math</li>
+                  <li>Economics</li>
+                  <li>Principles of Commerce</li>
                 </ul>
                 <div className="text-xs sm:text-sm font-body text-accent-navy mt-2">Board: AKU-EB</div>
               </div>
@@ -411,41 +409,23 @@ function FacultyCarousel() {
 function TestimonialsSection() {
   const testimonials = [
     {
-      name: 'Ayesha Siddiqui',
-      img: '/student-placeholder.avif',
-      text: 'Habibians Academy helped me achieve my dream grades! The teachers are so supportive and the environment is amazing.',
-      group: 'Science',
-    },
-    {
-      name: 'Bilal Khan',
-      img: '/student-placeholder.avif',
-      text: 'The interactive classes and free trial made it easy to choose Habibians. Highly recommended for Commerce Students!',
+      name: 'Sumit Ahuja',
+      img: '/Faculty/sumit.jpg',
+      text: 'I’m Sumit Ahuja, now a proud student at DePaul University, Chicago. When I was overwhelmed and unsure of my academic path, Habibians’ Academy offered not just answers, but unwavering support that led me to where I am today.',
       group: 'Commerce',
     },
     {
-      name: 'Sara Imran',
-      img: '/student-placeholder.avif',
-      text: 'I love the eBooks library and the friendly faculty. The Pre-Engineering group is the best in Hyderabad!',
+      name: 'Unaiz Damani',
+      img: '/Faculty/Man.png',
+      text: 'Greetings, my name is Unaiz Damani and I am currently a student at DePaul University in Chicago. I would like to express my gratitude to Habibians’ Academy in my journey to this milestone due to their sincere efforts and expert faculty.',
+      group: 'Pre-Medical',
+    },
+    {
+      name: 'Farheen Asif',
+      img: '/Faculty/Woman.png',
+      text: 'Salutations, I am Farheen Asif and I am at DePaul University, Chicago. Habibians’ Academy was there when I was lost in my academic search and it cleared my confusion beyond any doubt.',
       group: 'Pre-Engineering',
-    },
-    {
-      name: 'Hina Kamran',
-      img: '/student-placeholder.avif',
-      text: 'The teachers really care about your progress. I felt prepared and confident for my board exams.',
-      group: 'Science',
-    },
-    {
-      name: 'Ali Ahmed',
-      img: '/student-placeholder.avif',
-      text: 'The certification and quality of education at Habibians is outstanding. I would recommend it to everyone.',
-      group: 'Commerce',
-    },
-    {
-      name: 'Zara Khan',
-      img: '/student-placeholder.avif',
-      text: 'Amazing interactive sessions and personalized attention from teachers. Best academy in Hyderabad!',
-      group: 'Pre-Engineering',
-    },
+    }
   ];
 
   const CARD_COUNT = 3; // Show 3 testimonials at once
@@ -510,7 +490,7 @@ function TestimonialsSection() {
         </button>
 
         {/* Testimonials Carousel */}
-        <div className="flex justify-center items-stretch gap-8 py-8 min-h-[450px] relative overflow-hidden">
+        <div className="flex justify-center items-stretch gap-8 py-8 min-h-[600px] relative overflow-hidden">
           {visibleCards.map((testimonial) => {
             const offset = testimonial.position;
             const isCenter = offset === 0;
@@ -534,7 +514,7 @@ function TestimonialsSection() {
                   zIndex,
                 }}
               >
-                <div className={`relative bg-white/90 rounded-2xl shadow-xl p-8 border-2 ${isCenter ? 'border-blue-400' : 'border-blue-200'} flex flex-col items-center gap-6 group hover:shadow-2xl hover:border-blue-400 transition-all duration-500 w-80 h-96`}>
+                <div className={`relative bg-white/90 rounded-2xl shadow-xl p-8 border-2 ${isCenter ? 'border-blue-400' : 'border-blue-200'} flex flex-col items-center gap-6 group hover:shadow-2xl hover:border-blue-400 transition-all duration-500 w-[420px] h-[480px]`}>
                   {/* Decorative quote mark */}
                   <span className="absolute -top-4 left-4 text-5xl text-blue-300/60 font-serif select-none z-0">&quot;</span>
 

@@ -425,9 +425,9 @@ const AdmissionForm = () => {
                     onChange={(e) => handleInputChange('programPreferences', 'stream', e.target.value)}
                 >
                     <option value="">Select Stream</option>
-                    <option value="science">Science</option>
+                    <option value="pre-medical">Pre-Medical</option>
+                    <option value="pre-engineering">Pre-Engineering</option>
                     <option value="commerce">Commerce</option>
-                    <option value="arts">Arts</option>
                 </select>
                 <select
                     className="w-full h-16 bg-gray-200 rounded-lg border-2 border-stone-300 px-6 text-neutral-700 text-xl"
@@ -435,10 +435,8 @@ const AdmissionForm = () => {
                     onChange={(e) => handleInputChange('programPreferences', 'desiredClass', e.target.value)}
                 >
                     <option value="">Select Class</option>
-                    <option value="9">Class 9</option>
-                    <option value="10">Class 10</option>
-                    <option value="11">Class 11</option>
-                    <option value="12">Class 12</option>
+                    <option value="11">Year 1</option>
+                    <option value="12">Year 2</option>
                 </select>
                 <div className="col-span-2">
                     <textarea
@@ -686,7 +684,7 @@ const AdmissionForm = () => {
                         </div>
 
                         {/* Residence Proof Photo */}
-                        <div className="bg-gray-50 rounded-xl p-6 border-2 border-dashed border-gray-300 hover:border-violet-500 transition-colors">
+                        {/* <div className="bg-gray-50 rounded-xl p-6 border-2 border-dashed border-gray-300 hover:border-violet-500 transition-colors">
                             <div className="space-y-4">
                                 <div className="flex items-center justify-between">
                                     <label className="flex items-center space-x-2">
@@ -733,7 +731,7 @@ const AdmissionForm = () => {
                                     </div>
                                 )}
                             </div>
-                        </div>
+                        </div> */}
 
                         <div className="text-sm text-gray-500 mt-4">
                             <p>* Required photos</p>

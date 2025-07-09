@@ -26,12 +26,72 @@ interface UIAssignment extends FirebaseAssignment {
     points?: number;
 }
 
+// Sample data for demo purposes
+const SAMPLE_CLASSES = [
+    {
+        id: 'class1',
+        name: 'Mathematics Year 1',
+        subject: 'Mathematics',
+        schedule: 'Mon, Wed, Fri - 9:00 AM',
+        room: 'A1',
+        description: 'Algebra, Trigonometry, and Calculus basics.',
+        capacity: '30',
+        students: 28,
+        avgGrade: 85,
+        teacherId: 'sample-teacher',
+    },
+    {
+        id: 'class2',
+        name: 'Physics Year 2',
+        subject: 'Physics',
+        schedule: 'Tue, Thu - 11:00 AM',
+        room: 'B2',
+        description: 'Mechanics, Thermodynamics, and Waves.',
+        capacity: '25',
+        students: 22,
+        avgGrade: 78,
+        teacherId: 'sample-teacher',
+    },
+];
+const SAMPLE_ASSIGNMENTS = [
+    {
+        id: 'asgn1',
+        title: 'Algebra Quiz',
+        subject: 'Mathematics',
+        class: 'Mathematics Year 1',
+        description: 'Quiz on Algebraic Expressions and Equations.',
+        dueDate: '2025-07-15',
+        points: 20,
+        priority: 'high' as const,
+        material: '',
+        teacherId: 'sample-teacher',
+        status: 'active',
+        submissions: 20,
+        totalStudents: 28,
+    },
+    {
+        id: 'asgn2',
+        title: 'Thermodynamics Assignment',
+        subject: 'Physics',
+        class: 'Physics Year 2',
+        description: 'Assignment on Laws of Thermodynamics.',
+        dueDate: '2025-07-20',
+        points: 15,
+        priority: 'medium' as const,
+        material: '',
+        teacherId: 'sample-teacher',
+        status: 'active',
+        submissions: 15,
+        totalStudents: 22,
+    },
+];
+
 export default function TeacherPortalDashboard() {
     useProtectedRoute();
 
     const [activeTab, setActiveTab] = useState('dashboard');
-    const [assignments, setAssignments] = useState<UIAssignment[]>([]);
-    const [classes, setClasses] = useState<FirebaseClass[]>([]);
+    const [assignments, setAssignments] = useState<UIAssignment[]>(SAMPLE_ASSIGNMENTS);
+    const [classes, setClasses] = useState<FirebaseClass[]>(SAMPLE_CLASSES);
     const [teacher, setTeacher] = useState<FirebaseTeacher | null>(null);
     const [loading, setLoading] = useState(true);
     const [success, setSuccess] = useState('');

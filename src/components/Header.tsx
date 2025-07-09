@@ -48,7 +48,7 @@ export default function Header() {
                 {/* Desktop Nav */}
                 <nav className="hidden md:flex items-center gap-6">
                     <Link
-                        href="#groups"
+                        href="/#groups"
                         className="font-semibold text-primary-white hover:text-accent-lightblue transition-colors duration-200 relative group"
                     >
                         Courses
