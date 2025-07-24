@@ -63,6 +63,9 @@ export default function Home() {
                   <a href="/enroll" className="mt-4 inline-block px-8 py-3 rounded-full bg-accent-lightblue text-primary-blue font-heading font-bold text-lg shadow-lg hover:bg-accent-navy hover:text-primary-white transition-colors animate-fade-in delay-300">
                     Enroll Now
                   </a>
+                  <a href="/courses" className="mt-2 ml-2 inline-block px-6 py-2 rounded-full bg-primary-blue text-primary-white font-heading font-bold text-base shadow hover:bg-accent-navy transition-colors animate-fade-in delay-400">
+                    View Courses
+                  </a>
                 </div>
                 <div className="flex-1 flex items-center justify-center w-full lg:w-auto">
                   <div className="relative w-full max-w-md aspect-video rounded-xl overflow-hidden shadow-lg ring-4 ring-accent-lightblue ring-offset-4 ring-offset-primary-silver transition-all duration-500 hover:scale-105 hover:ring-accent-navy group">
@@ -218,47 +221,46 @@ export default function Home() {
             className="w-full max-w-7xl mx-auto mt-10 md:mt-16 mb-8 px-2 sm:px-4 py-8 sm:py-12 rounded-2xl shadow-xl bg-gradient-to-br from-primary-silver via-primary-white to-accent-lightblue border-t-4 border-accent-navy animate-fade-in z-10 relative"
             id="groups"
           >
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-heading font-bold text-primary-blue text-center mb-6 sm:mb-10 drop-shadow">Our Major Groups</h2>
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-heading font-bold text-primary-blue text-center mb-6 sm:mb-10 drop-shadow">Available Boards</h2>
             <div className="flex flex-col md:flex-row gap-6 md:gap-10 justify-center items-stretch">
-              {/* Science Group */}
+              {/* Cambridge Board */}
               <div className="flex-1 flex flex-col items-center bg-primary-white/80 rounded-xl shadow-lg p-4 sm:p-6 border-2 border-accent-lightblue mb-4 md:mb-0">
                 <div className="w-20 h-20 sm:w-28 sm:h-28 mb-4 rounded-full overflow-hidden border-4 border-accent-navy bg-primary-silver flex items-center justify-center">
-                  <Image src="/affiliates/science-group.png" alt="Science Group" width={80} height={80} className="object-cover w-full h-full sm:w-[100px] sm:h-[100px]" />
+                  <Image src="/affiliates/CAIE.jpg" alt="Cambridge Board" width={80} height={80} className="object-cover w-full h-full sm:w-[100px] sm:h-[100px]" />
                 </div>
-                <h3 className="text-base sm:text-lg md:text-xl font-heading font-bold text-primary-blue mb-2">Pre-Medical</h3>
-                <ul className="text-primary-blue/80 font-body text-xs sm:text-sm md:text-base mb-2 list-disc list-inside h-24">
-                  <li>Biology</li>
-                  <li>Chemistry</li>
-                  <li>Physics</li>
-                </ul>
-                <div className="text-xs sm:text-sm font-body text-accent-navy mt-2">Board: AKU-EB</div>
+                <h3 className="text-base sm:text-lg md:text-xl font-heading font-bold text-primary-blue mb-2">Cambridge Board</h3>
+                <p className="text-primary-blue/80 font-body text-xs sm:text-sm md:text-base mb-2 text-center">
+                  Cambridge Assessment International Education. Globally recognized, wide range of subjects for O/A Levels.
+                </p>
+                <a href="/courses" className="mt-2 px-6 py-2 rounded-full bg-accent-lightblue text-primary-blue font-heading font-bold text-sm shadow hover:bg-accent-navy hover:text-primary-white transition-colors">
+                  View Courses
+                </a>
               </div>
-              {/* Pre-Engineering Group */}
-              <div className="flex-1 flex flex-col items-center bg-primary-white/80 rounded-xl shadow-lg p-4 sm:p-6 border-2 border-accent-lightblue">
-                <div className="w-20 h-20 sm:w-28 sm:h-28 mb-4 rounded-full overflow-hidden border-4 border-accent-navy bg-primary-silver flex items-center justify-center">
-                  <Image src="/affiliates/engineering-group.png" alt="Pre-Engineering Group" width={80} height={80} className="object-cover w-full h-full sm:w-[100px] sm:h-[100px]" />
-                </div>
-                <h3 className="text-base sm:text-lg md:text-xl font-heading font-bold text-primary-blue mb-2">Pre-Engineering</h3>
-                <ul className="text-primary-blue/80 font-body text-xs sm:text-sm md:text-base mb-2 list-disc list-inside h-24">
-                  <li>Mathematics</li>
-                  <li>Physics</li>
-                  <li>Chemistry</li>
-                </ul>
-                <div className="text-xs sm:text-sm font-body text-accent-navy mt-2">Board: AKU-EB</div>
-              </div>
-              {/* Commerce Group */}
+              {/* Aga Khan Board */}
               <div className="flex-1 flex flex-col items-center bg-primary-white/80 rounded-xl shadow-lg p-4 sm:p-6 border-2 border-accent-lightblue mb-4 md:mb-0">
                 <div className="w-20 h-20 sm:w-28 sm:h-28 mb-4 rounded-full overflow-hidden border-4 border-accent-navy bg-primary-silver flex items-center justify-center">
-                  <Image src="/affiliates/commerce-group.png" alt="Commerce Group" width={80} height={80} className="object-cover w-full h-full sm:w-[100px] sm:h-[100px]" />
+                  <Image src="/affiliates/AKU.jpg" alt="Aga Khan Board" width={80} height={80} className="object-cover w-full h-full sm:w-[100px] sm:h-[100px]" />
                 </div>
-                <h3 className="text-base sm:text-lg md:text-xl font-heading font-bold text-primary-blue mb-2">Commerce</h3>
-                <ul className="text-primary-blue/80 font-body text-xs sm:text-sm md:text-base mb-2 list-disc list-inside h-24">
-                  <li>Accounting</li>
-                  <li>Business Math</li>
-                  <li>Economics</li>
-                  <li>Principles of Commerce</li>
-                </ul>
-                <div className="text-xs sm:text-sm font-body text-accent-navy mt-2">Board: AKU-EB</div>
+                <h3 className="text-base sm:text-lg md:text-xl font-heading font-bold text-primary-blue mb-2">Aga Khan Board</h3>
+                <p className="text-primary-blue/80 font-body text-xs sm:text-sm md:text-base mb-2 text-center">
+                  Aga Khan University Examination Board. Modern, skill-based curriculum for Pakistani students.
+                </p>
+                <a href="/courses" className="mt-2 px-6 py-2 rounded-full bg-accent-lightblue text-primary-blue font-heading font-bold text-sm shadow hover:bg-accent-navy hover:text-primary-white transition-colors">
+                  View Courses
+                </a>
+              </div>
+              {/* IDBP Board */}
+              <div className="flex-1 flex flex-col items-center bg-primary-white/80 rounded-xl shadow-lg p-4 sm:p-6 border-2 border-accent-lightblue mb-4 md:mb-0">
+                <div className="w-20 h-20 sm:w-28 sm:h-28 mb-4 rounded-full overflow-hidden border-4 border-accent-navy bg-primary-silver flex items-center justify-center">
+                  <Image src="/affiliates/ibdp.jpg" alt="IDBP Board" width={80} height={80} className="object-cover w-full h-full sm:w-[100px] sm:h-[100px]" />
+                </div>
+                <h3 className="text-base sm:text-lg md:text-xl font-heading font-bold text-primary-blue mb-2">IBDP Board</h3>
+                <p className="text-primary-blue/80 font-body text-xs sm:text-sm md:text-base mb-2 text-center">
+                  The International Baccalaureate Diploma Programme (IBDP) - IBDP. National board offers four high quality international education programmes.
+                </p>
+                <a href="/courses" className="mt-2 px-6 py-2 rounded-full bg-accent-lightblue text-primary-blue font-heading font-bold text-sm shadow hover:bg-accent-navy hover:text-primary-white transition-colors">
+                  View Courses
+                </a>
               </div>
             </div>
           </section>
