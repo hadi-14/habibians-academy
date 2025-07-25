@@ -20,27 +20,26 @@ export interface Teacher {
   uid: string;
   name: string;
   email: string;
-  department: string;
   subjects: string[];
   createdAt?: Date;
 }
 
 export interface Class {
-  subject: string;
-  schedule: string;
-  room: string;
-  description: string;
+  schedule: ReactNode;
+  room: ReactNode;
+  avgGrade: ReactNode;
+  id: Key | null | undefined;
   capacity: string;
   students: number;
-  avgGrade: number;
-  id?: string;
-  teacherId: string;
   name: string;
   createdAt?: Date;
   // Add other fields as needed
 }
 
 export interface Assignment {
+  status: string;
+  submissions: ReactNode;
+  totalStudents: ReactNode;
   id?: string;
   teacherId: string;
   title: string;
@@ -54,6 +53,16 @@ export interface Assignment {
   createdAt?: Date;
   // Add other fields as needed
 }
+
+// Extend Firebase types for UI needs
+export interface UIAssignment extends Assignment {
+    status?: string;
+    submissions?: number;
+    totalStudents?: number;
+    points?: number;
+    dueTime?: string;
+}
+
 
 export interface Submission {
   id?: string;
@@ -101,14 +110,12 @@ export async function getTeacherProfile(uid: string): Promise<Teacher | null> {
   if (
     typeof data.name === "string" &&
     typeof data.email === "string" &&
-    typeof data.department === "string" &&
     Array.isArray(data.subjects)
   ) {
     return {
       uid,
       name: data.name,
       email: data.email,
-      department: data.department,
       subjects: data.subjects,
     };
   }
@@ -129,11 +136,11 @@ export function listenToTeacherClasses(
 ) {
   const q = query(
     collection(db, "classes"),
-    where("teacherId", "==", teacherId),
-    orderBy("createdAt", "desc")
+    where("teacherIdList", "array-contains", teacherId),
+    orderBy("createdAt")
   );
   return onSnapshot(q, (snap) =>
-    cb(snap.docs.map((doc) => ({ id: doc.id, ...doc.data() } as Class)))
+    cb(snap.docs.map((doc) => ({ id: doc.id, ...doc.data() } as unknown as Class)))
   );
 }
 
