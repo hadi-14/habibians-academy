@@ -15,7 +15,6 @@ import { MeetContent } from '@/components/TeacherPortalDashboard/MeetContent';
 import { SettingsContent } from '@/components/TeacherPortalDashboard/SettingsContent';
 import { MessageAlert } from '@/components/TeacherPortalDashboard/MessageAlert';
 
-
 export default function TeacherPortalDashboardPage() {
     useProtectedRoute();
     const [activeTab, setActiveTab] = useState('dashboard');

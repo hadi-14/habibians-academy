@@ -39,9 +39,6 @@ export interface Class {
 }
 
 export interface Assignment {
-  status: string;
-  submissions: number;
-  totalStudents: number;
   id?: string;
   teacherId: string;
   title: string;
@@ -132,7 +129,11 @@ export function listenToTeacherClasses(
     orderBy("createdAt")
   );
   return onSnapshot(q, (snap) =>
-    cb(snap.docs.map((doc) => ({ id: doc.id, ...doc.data() } as unknown as Class)))
+    cb(
+      snap.docs.map(
+        (doc) => ({ id: doc.id, ...doc.data() } as unknown as Class)
+      )
+    )
   );
 }
 
