@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import { useState, useEffect } from 'react';
-import { signInWithEmailAndPassword, sendPasswordResetEmail, setPersistence, browserLocalPersistence, onAuthStateChanged } from 'firebase/auth';
+import { signInWithEmailAndPassword, sendPasswordResetEmail, setPersistence, browserSessionPersistence, onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/firebase/config';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -31,7 +31,7 @@ export default function StudentLoginPage() {
     setError('');
 
     try {
-      await setPersistence(auth, browserLocalPersistence);
+      await setPersistence(auth, browserSessionPersistence);
       await signInWithEmailAndPassword(auth, email, password);
       router.push('/student-portal');
     } catch (err: any) {
