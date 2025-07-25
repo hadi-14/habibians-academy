@@ -27,6 +27,7 @@ export interface Teacher {
 }
 
 export interface Class {
+  subject: ReactNode;
   schedule: ReactNode;
   room: ReactNode;
   avgGrade: ReactNode;
@@ -39,9 +40,13 @@ export interface Class {
 }
 
 export interface Assignment {
+  classId: string | number | readonly string[] | undefined;
+  dueTime: string | number | readonly string[] | undefined;
+  assignmentType: string | number | readonly string[] | undefined;
+  classCapacity: string | undefined;
   status: string;
-  submissions: number;
-  totalStudents: number;
+  submissions: ReactNode;
+  totalStudents: ReactNode;
   id?: string;
   teacherId: string;
   title: string;
@@ -132,7 +137,11 @@ export function listenToTeacherClasses(
     orderBy("createdAt")
   );
   return onSnapshot(q, (snap) =>
-    cb(snap.docs.map((doc) => ({ id: doc.id, ...doc.data() } as unknown as Class)))
+    cb(
+      snap.docs.map(
+        (doc) => ({ id: doc.id, ...doc.data() } as unknown as Class)
+      )
+    )
   );
 }
 

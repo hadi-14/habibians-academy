@@ -63,7 +63,7 @@ export const MeetContent: React.FC<MeetContentProps> = ({ classes, setSuccess })
                         <select className="w-full px-3 py-2 border rounded-lg">
                             <option value="">Select Class</option>
                             {classes.map(cls => (
-                                <option key={cls.id} value={cls.id}>{cls.name}</option>
+                                <option key={String(cls.id)} value={cls.id != null ? String(cls.id) : ''}>{cls.name}</option>
                             ))}
                         </select>
                         <input type="datetime-local" className="w-full px-3 py-2 border rounded-lg" />

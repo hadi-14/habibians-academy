@@ -33,15 +33,6 @@ export const SettingsContent: React.FC<SettingsContentProps> = ({ teacher }) => 
                                 readOnly
                             />
                         </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Department</label>
-                            <input
-                                type="text"
-                                value={teacher.department || ''}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                readOnly
-                            />
-                        </div>
                     </div>
                 </div>
                 <div className="bg-white rounded-xl p-6 shadow-lg">

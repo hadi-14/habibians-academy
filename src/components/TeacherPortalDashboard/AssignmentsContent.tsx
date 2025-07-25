@@ -1,24 +1,24 @@
 import React, { useState, useCallback } from 'react';
-import { Plus, Search, Edit, Trash2, BookOpen, Users, GraduationCap, Clock, CheckCircle, Star, X, Save } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, BookOpen, Users, GraduationCap, Clock, CheckCircle, Star, Save } from 'lucide-react';
 import { createAssignment, deleteAssignment } from '@/firebase/teacher-portal';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import Image from "next/image";
-import type { UIAssignment, Class, Teacher } from '@/firebase/teacher-portal'; // Adjust import path if needed
+import type { Assignment as FirebaseAssignment, Class, Teacher } from '@/firebase/teacher-portal'; // Adjust import path if needed
 
 const subjects = ['Mathematics', 'Physics', 'Chemistry', 'Biology', 'English', 'History', 'Geography'];
 
 interface AssignmentsContentProps {
-    assignments: UIAssignment[];
+    assignments: FirebaseAssignment[];
     classes: Class[];
     teacher: Teacher;
     setSuccess: (msg: string) => void;
     setLoading: (loading: boolean) => void;
-    setAssignments: React.Dispatch<React.SetStateAction<UIAssignment[]>>; // For update/delete
+    setAssignments: React.Dispatch<React.SetStateAction<FirebaseAssignment[]>>; // For update/delete
 }
 
 export const AssignmentsContent: React.FC<AssignmentsContentProps> = ({ assignments, classes, teacher, setSuccess, setLoading, setAssignments }) => {
     const [showAssignmentForm, setShowAssignmentForm] = useState(false);
-    const [editingAssignment, setEditingAssignment] = useState<UIAssignment | null>(null);
+    const [editingAssignment, setEditingAssignment] = useState<FirebaseAssignment | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterSubject, setFilterSubject] = useState('');
     const [newAssignment, setNewAssignment] = useState({
@@ -75,7 +75,9 @@ export const AssignmentsContent: React.FC<AssignmentsContentProps> = ({ assignme
                 submissions: 0,
                 totalStudents: selectedClass?.students || 0,
                 class: selectedClass?.name || '',
-                classId: selectedClass?.id || '',
+                classId: typeof selectedClass?.id === 'string' || typeof selectedClass?.id === 'number'
+                    ? selectedClass?.id
+                    : selectedClass?.id?.toString() || '',
                 classCapacity: selectedClass?.capacity || '',
             };
 
@@ -207,7 +209,7 @@ export const AssignmentsContent: React.FC<AssignmentsContentProps> = ({ assignme
                             >
                                 <option value="">Select Class</option>
                                 {classes.map(cls => (
-                                    <option key={cls.id} value={cls.id}>
+                                    <option key={cls.id?.toString()} value={cls.id?.toString()}>
                                         {cls.name} ({cls.subject}) - Capacity: {cls.capacity}
                                     </option>
                                 ))}
@@ -249,7 +251,7 @@ export const AssignmentsContent: React.FC<AssignmentsContentProps> = ({ assignme
                                 value={editingAssignment ? editingAssignment.assignmentType : newAssignment.assignmentType}
                                 onChange={(e) => editingAssignment
                                     ? setEditingAssignment({ ...editingAssignment, assignmentType: e.target.value })
-                                    : setNewAssignment({ ...newAssignment, assignmentType: e.target.value })
+                                    : setNewAssignment({ ...newAssignment, assignmentType: e.target.value as 'assignment' | 'quiz' | 'material' })
                                 }
                                 className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             >
@@ -404,7 +406,7 @@ export const AssignmentsContent: React.FC<AssignmentsContentProps> = ({ assignme
                                 </div>
                             </div>
                             <div className="mt-2 text-xs text-gray-400">
-                                Created: {assignment.createdAt ? assignment.createdAt : 'N/A'}
+                                Created: {assignment.createdAt ? (typeof assignment.createdAt === 'string' ? assignment.createdAt : assignment.createdAt.toLocaleString()) : 'N/A'}
                             </div>
                         </div>
                     );
