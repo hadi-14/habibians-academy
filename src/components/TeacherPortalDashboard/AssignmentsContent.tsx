@@ -36,12 +36,13 @@ export const AssignmentsContent: React.FC<AssignmentsContentProps> = ({ assignme
     const [materialFile, setMaterialFile] = useState<File | null>(null);
 
     const filteredAssignments = assignments.filter(assignment => {
-        const matchesSearch = assignment.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        const cls = classes.find(c => c.uid === assignment.classId);
+        const matchesSearch =
+            assignment.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             assignment.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            assignment.class.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesSubject = !filterSubject || assignment.subject === filterSubject;
+            (cls?.name && cls.name.toLowerCase().includes(searchTerm.toLowerCase()));
         // const matchesStatus = !filterStatus || assignment.status === filterStatus; // filterStatus not used in state
-        return matchesSearch && matchesSubject; // && matchesStatus;
+        return matchesSearch; // && matchesStatus;
     });
 
     const handleCreateAssignment = useCallback(async () => {
@@ -65,20 +66,16 @@ export const AssignmentsContent: React.FC<AssignmentsContentProps> = ({ assignme
                     return;
                 }
             }
-            const selectedClass = classes.find(c => c.id === newAssignment.classId);
+            const selectedClass = classes.find(c => c.uid === newAssignment.classId);
             const assignmentToCreate = {
                 ...newAssignment,
                 points: Number(newAssignment.points),
                 material: materialUrl,
-                teacherId: teacher.uid,
+                teacherId: teacher.uid ?? '',
                 status: 'active',
                 submissions: 0,
-                totalStudents: selectedClass?.students || 0,
-                class: selectedClass?.name || '',
-                classId: typeof selectedClass?.id === 'string' || typeof selectedClass?.id === 'number'
-                    ? selectedClass?.id
-                    : selectedClass?.id?.toString() || '',
-                classCapacity: selectedClass?.capacity || '',
+                classId: selectedClass?.uid || '',
+                dueDate: new Date(newAssignment.dueDate), // Convert string to Date
             };
 
             await createAssignment(assignmentToCreate);
@@ -100,7 +97,7 @@ export const AssignmentsContent: React.FC<AssignmentsContentProps> = ({ assignme
             setLoading(true);
             // Optimistic update UI
             setAssignments(prev => prev.map(a =>
-                a.id === editingAssignment.id ? editingAssignment : a
+                a.uid === editingAssignment.uid ? editingAssignment : a
             ));
             // In a real scenario, you'd call an update function here
             // await updateAssignment(editingAssignment.id, editingAssignment);
@@ -121,7 +118,7 @@ export const AssignmentsContent: React.FC<AssignmentsContentProps> = ({ assignme
             await deleteAssignment(id);
             setSuccess('Assignment deleted successfully!');
             // Optimistic update UI
-            setAssignments(prev => prev.filter(a => a.id !== id));
+            setAssignments(prev => prev.filter(a => a.uid !== id));
         } catch (e) {
             console.error('Failed to delete assignment.', e);
             alert("Failed to delete assignment. Please try again.");
@@ -209,16 +206,24 @@ export const AssignmentsContent: React.FC<AssignmentsContentProps> = ({ assignme
                             >
                                 <option value="">Select Class</option>
                                 {classes.map(cls => (
-                                    <option key={cls.id?.toString()} value={cls.id?.toString()}>
-                                        {cls.name} ({cls.subject}) - Capacity: {cls.capacity}
+                                    <option key={cls.uid} value={cls.uid}>
+                                        {cls.name} - Capacity: {cls.capacity}
                                     </option>
                                 ))}
                             </select>
                             <input
                                 type="date"
-                                value={editingAssignment ? editingAssignment.dueDate : newAssignment.dueDate}
+                                value={
+                                    editingAssignment
+                                        ? typeof editingAssignment.dueDate === 'string'
+                                            ? editingAssignment.dueDate
+                                            : editingAssignment.dueDate instanceof Date
+                                                ? editingAssignment.dueDate.toISOString()
+                                                : ''
+                                        : newAssignment.dueDate
+                                }
                                 onChange={(e) => editingAssignment
-                                    ? setEditingAssignment({ ...editingAssignment, dueDate: e.target.value })
+                                    ? setEditingAssignment({ ...editingAssignment, dueDate: new Date(e.target.value) })
                                     : setNewAssignment({ ...newAssignment, dueDate: e.target.value })
                                 }
                                 className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -329,9 +334,9 @@ export const AssignmentsContent: React.FC<AssignmentsContentProps> = ({ assignme
             )}
             <div className="grid gap-4">
                 {filteredAssignments.map(assignment => {
-                    const cls = classes.find(c => c.id === assignment.classId);
+                    const cls = classes.find(c => c.uid === assignment.classId);
                     return (
-                        <div key={assignment.id} className="bg-gradient-to-br from-blue-50 via-white to-indigo-100 rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-200">
+                        <div key={assignment.uid} className="bg-gradient-to-br from-blue-50 via-white to-indigo-100 rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-200">
                             <div className="flex justify-between items-start">
                                 <div className="flex-1">
                                     <div className="flex items-center gap-2 mb-2">
@@ -353,11 +358,11 @@ export const AssignmentsContent: React.FC<AssignmentsContentProps> = ({ assignme
                                         </span>
                                         <span className="flex items-center gap-1">
                                             <Users className="w-4 h-4" />
-                                            {cls?.name || assignment.class} ({cls?.capacity || assignment.classCapacity} capacity)
+                                            {cls?.name} ({cls?.capacity} capacity)
                                         </span>
                                         <span className="flex items-center gap-1">
                                             <GraduationCap className="w-4 h-4" />
-                                            {cls?.students || assignment.totalStudents} students
+                                            {cls?.students} students
                                         </span>
                                     </div>
                                     {assignment.description && (
@@ -378,7 +383,7 @@ export const AssignmentsContent: React.FC<AssignmentsContentProps> = ({ assignme
                                     <div className="flex flex-wrap gap-6 text-sm text-gray-500 mt-2">
                                         <span className="flex items-center gap-1">
                                             <Clock className="w-4 h-4" />
-                                            Due: {assignment.dueDate} {assignment.dueTime && `at ${assignment.dueTime}`}
+                                            Due: {assignment.dueDate.toISOString()} {assignment.dueTime && `at ${assignment.dueTime}`}
                                         </span>
                                         <span className="flex items-center gap-1">
                                             <CheckCircle className="w-4 h-4" />
@@ -386,7 +391,7 @@ export const AssignmentsContent: React.FC<AssignmentsContentProps> = ({ assignme
                                         </span>
                                         <span className="flex items-center gap-1">
                                             <Users className="w-4 h-4" /> {/* Using Users icon for submissions */}
-                                            {assignment.submissions}/{assignment.totalStudents} submitted
+                                            {assignment.submissions}/{cls?.students} submitted
                                         </span>
                                     </div>
                                 </div>
@@ -398,7 +403,7 @@ export const AssignmentsContent: React.FC<AssignmentsContentProps> = ({ assignme
                                         <Edit className="w-4 h-4" />
                                     </button>
                                     <button
-                                        onClick={() => assignment.id && handleDeleteAssignment(assignment.id)}
+                                        onClick={() => assignment.uid && handleDeleteAssignment(assignment.uid)}
                                         className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                                     >
                                         <Trash2 className="w-4 h-4" />
@@ -406,7 +411,7 @@ export const AssignmentsContent: React.FC<AssignmentsContentProps> = ({ assignme
                                 </div>
                             </div>
                             <div className="mt-2 text-xs text-gray-400">
-                                Created: {assignment.createdAt ? (typeof assignment.createdAt === 'string' ? assignment.createdAt : assignment.createdAt.toLocaleString()) : 'N/A'}
+                                Created: {assignment.createdAt ? assignment.createdAt.toISOString() : 'N/A'}
                             </div>
                         </div>
                     );

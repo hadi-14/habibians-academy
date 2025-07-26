@@ -59,36 +59,37 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({ classes, ass
                 <div className="bg-white rounded-xl p-6 shadow-lg">
                     <h3 className="text-xl font-semibold text-gray-800 mb-4">Recent Assignments</h3>
                     <div className="space-y-3">
-                        {assignments.slice(0, 4).map(assignment => (
-                            <div key={assignment.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                <div className="flex-1">
-                                    <div className="flex items-center gap-2">
-                                        <h4 className="font-medium text-gray-800">{assignment.title}</h4>
-                                        {assignment.priority === 'high' && (
-                                            <Star className="w-4 h-4 text-red-500 fill-current" />
-                                        )}
+                        {assignments.slice(0, 4).map(assignment => {
+                            const assignmentClass = classes.find(cls => String(cls.uid) === assignment.classId) || { name: 'Unknown Class', students: 0 };
+                            return (
+                                <div key={assignment.uid} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <div className="flex-1">
+                                        <div className="flex items-center gap-2">
+                                            <h4 className="font-medium text-gray-800">{assignment.title}</h4>
+                                            {assignment.priority === 'high' && (
+                                                <Star className="w-4 h-4 text-red-500 fill-current" />
+                                            )}
+                                        </div>
+                                        <p className="text-sm text-gray-600">{assignmentClass.name}</p>
                                     </div>
-                                    <p className="text-sm text-gray-600">{assignment.class}</p>
+                                    <div className="text-right">
+                                        <p className="text-sm text-gray-600">{assignment.submissions}/{assignmentClass.students}</p>
+                                        <p className="text-xs text-gray-500">submissions</p>
+                                    </div>
                                 </div>
-                                <div className="text-right">
-                                    <p className="text-sm text-gray-600">{assignment.submissions}/{assignment.totalStudents}</p>
-                                    <p className="text-xs text-gray-500">submissions</p>
-                                </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
                 <div className="bg-white rounded-xl p-6 shadow-lg">
                     <h3 className="text-xl font-semibold text-gray-800 mb-4">Class Performance</h3>
                     <div className="space-y-3">
                         {classes.slice(0, 4).map(cls => (
-                            <div key={String(cls.id)} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div key={String(cls.uid)} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                                 <div className="flex-1">
                                     <h4 className="font-medium text-gray-800">{cls.name}</h4>
-                                    <p className="text-sm text-gray-600">{cls.schedule} • {cls.room}</p>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-sm font-medium text-gray-800">{cls.avgGrade}%</p>
                                     <p className="text-xs text-gray-500">{cls.students} students</p>
                                 </div>
                             </div>

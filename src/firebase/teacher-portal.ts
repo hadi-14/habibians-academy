@@ -1,5 +1,3 @@
-import { ReactNode } from "react";
-import { Key } from "readline";
 import { db } from "./config";
 import {
   collection,
@@ -19,72 +17,65 @@ import {
 
 // Type definitions
 export interface Teacher {
-  uid: string;
+  uid?: string;
   name: string;
   email: string;
   subjects: string[];
-  createdAt?: Date;
+  createdAt: Date;
 }
 
 export interface Class {
-  subject: ReactNode;
-  schedule: ReactNode;
-  room: ReactNode;
-  avgGrade: ReactNode;
-  id: Key | null | undefined;
-  capacity: string;
-  students: number;
+  uid?: string; // Add uid to interface
   name: string;
-  createdAt?: Date;
-  // Add other fields as needed
+  capacity: string | number;
+  students: number;
+  createdAt: Date;
+  teacherIdList: string[];
 }
 
 export interface Assignment {
+  uid?: string;
   classId: string | number | readonly string[] | undefined;
   dueTime: string | number | readonly string[] | undefined;
   assignmentType: string | number | readonly string[] | undefined;
-  classCapacity: string | undefined;
   status: string;
-  submissions: ReactNode;
-  totalStudents: ReactNode;
-  id?: string;
+  submissions: number;
   teacherId: string;
   title: string;
   subject: string;
-  class: string;
-  dueDate: string;
+  dueDate: Date;
   priority: "low" | "medium" | "high";
   material?: string;
   description?: string;
   points?: number;
   createdAt?: Date;
-  // Add other fields as needed
 }
 
 export interface Submission {
-  id?: string;
+  uid?: string;
   assignmentId: string;
   studentId: string;
   grade?: number;
   feedback?: string;
-  // Add other fields as needed
+  
+  // Todo: Add other fields
+  
 }
 
 export interface Announcement {
-  id?: string;
+  uid?: string;
   classId: string;
   title: string;
   message: string;
   createdAt?: Date;
-  // Add other fields as needed
 }
 
 export interface Student {
-  id?: string;
+  uid?: string;
   name: string;
   email: string;
   enrolledClasses: string[];
-  // Add other fields as needed
+  rollNumber?: string | number;
 }
 
 // TEACHER PROFILE
@@ -114,17 +105,27 @@ export async function getTeacherProfile(uid: string): Promise<Teacher | null> {
       name: data.name,
       email: data.email,
       subjects: data.subjects,
+      createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(),
     };
   }
   return null;
 }
 
 // CLASSES
-export async function createClass(data: Class) {
-  return await addDoc(collection(db, "classes"), {
-    ...data,
-    createdAt: serverTimestamp(),
-  });
+export async function createClass(classData: Class) {
+  try {
+    const classesRef = collection(db, "classes");
+    const docRef = await addDoc(classesRef, {
+      ...classData,
+      createdAt: new Date(),
+    });
+    // Update the document with its uid
+    await updateDoc(docRef, { uid: docRef.id });
+    return { ...classData, uid: docRef.id };
+  } catch (error) {
+    console.error("Error creating class:", error);
+    throw error;
+  }
 }
 
 export function listenToTeacherClasses(
@@ -134,12 +135,12 @@ export function listenToTeacherClasses(
   const q = query(
     collection(db, "classes"),
     where("teacherIdList", "array-contains", teacherId),
-    orderBy("createdAt")
+    orderBy("name")
   );
   return onSnapshot(q, (snap) =>
     cb(
       snap.docs.map(
-        (doc) => ({ id: doc.id, ...doc.data() } as unknown as Class)
+        (doc) => ({ uid: doc.id, ...doc.data() } as Class)
       )
     )
   );
@@ -172,7 +173,7 @@ export function listenToTeacherAssignments(
     orderBy("createdAt", "desc")
   );
   return onSnapshot(q, (snap) =>
-    cb(snap.docs.map((doc) => ({ id: doc.id, ...doc.data() } as Assignment)))
+    cb(snap.docs.map((doc) => ({ uid: doc.id, ...doc.data() } as Assignment)))
   );
 }
 
@@ -197,7 +198,7 @@ export async function getStudentsByClass(classId: string): Promise<Student[]> {
     where("enrolledClasses", "array-contains", classId)
   );
   const snap = await getDocs(q);
-  return snap.docs.map((doc) => ({ id: doc.id, ...doc.data() } as Student));
+  return snap.docs.map((doc) => ({ uid: doc.id, ...doc.data() } as Student));
 }
 
 // SUBMISSIONS
@@ -210,7 +211,7 @@ export function listenToAssignmentSubmissions(
     where("assignmentId", "==", assignmentId)
   );
   return onSnapshot(q, (snap) =>
-    cb(snap.docs.map((doc) => ({ id: doc.id, ...doc.data() } as Submission)))
+    cb(snap.docs.map((doc) => ({ uid: doc.id, ...doc.data() } as Submission)))
   );
 }
 
@@ -240,6 +241,6 @@ export function listenToClassAnnouncements(
     orderBy("createdAt", "desc")
   );
   return onSnapshot(q, (snap) =>
-    cb(snap.docs.map((doc) => ({ id: doc.id, ...doc.data() } as Announcement)))
+    cb(snap.docs.map((doc) => ({ uid: doc.id, ...doc.data() } as Announcement)))
   );
 }

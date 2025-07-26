@@ -35,21 +35,19 @@ export default function TeacherPortalDashboardPage() {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (!user) {
                 setLoading(false);
+                handleLogout();
                 return;
             }
 
 
             try {
                 const profile = await getTeacherProfile(user.uid);
-                console.log('User is signed in:', user, profile);
+                // console.log('User is signed in:', user, profile);
                 if (!profile) {
                     setLoading(false);
                     return;
                 }
                 setTeacher(profile);
-                if (typeof window !== 'undefined') {
-                    localStorage.setItem('teacher_profile', JSON.stringify(profile));
-                }
             } catch (error) {
                 console.error('Error loading teacher profile:', error);
             } finally {
@@ -61,9 +59,10 @@ export default function TeacherPortalDashboardPage() {
 
     // Real-time classes and assignments from Firebase
     useEffect(() => {
-        if (!teacher) return;
+        if (!teacher?.uid) return;
         setLoading(true);
         const unsubClasses = listenToTeacherClasses(teacher.uid, (cls) => {
+            console.log('Classes listened:', cls);
             setClasses(
                 cls.map((c) => ({
                     ...c,
@@ -78,10 +77,10 @@ export default function TeacherPortalDashboardPage() {
             setLoading(false);
         });
         return () => {
-            unsubClasses();
+            unsubClasses(); 
             unsubAssignments();
         };
-    }, [teacher]);
+    }, [teacher?.uid]);
 
     // Clear messages after 3 seconds
     useEffect(() => {
@@ -96,9 +95,6 @@ export default function TeacherPortalDashboardPage() {
     // Logout handler
     const handleLogout = async () => {
         await signOut(auth);
-        if (typeof window !== 'undefined') {
-            localStorage.removeItem('teacher_profile');
-        }
         window.location.href = '/teacher-portal/login';
     };
 
