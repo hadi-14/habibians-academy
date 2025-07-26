@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { BookOpen, Download, Users, Award, ChevronDown, ChevronUp, ExternalLink, GraduationCap } from 'lucide-react';
+import Link from 'next/link';
 
 interface Subject {
   name: string;
@@ -25,141 +26,141 @@ interface Board {
 const boards: Board[] = [
   {
     name: 'CAIE',
-    description: 'Cambridge Assessment International Education',
+    description: 'Cambridge International A Level (Minimum 3 subjects required)',
     icon: '🎓',
-    totalSubjects: 31,
+    totalSubjects: 12,
     fields: [
-      // IGCSE – Science
-      { name: 'IGCSE - Science', icon: '🔬', subjects: [
-          { name: 'Biology', code: '0610', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-igcse-biology-0610/' },
-          { name: 'Chemistry', code: '0620', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-igcse-chemistry-0620/' },
-          { name: 'Physics', code: '0625', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-igcse-physics-0625/' },
-          { name: 'Mathematics', code: '0580', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-igcse-mathematics-0580/' },
-      ]},
-      // IGCSE – Commerce
-      { name: 'IGCSE - Commerce', icon: '💼', subjects: [
-          { name: 'Economics', code: '0455', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-igcse-economics-0455/' },
-          { name: 'Business Studies', code: '0450', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-igcse-business-studies-0450/' },
-          { name: 'Accounting', code: '0452', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-igcse-accounting-0452/' },
-      ]},
-      // IGCSE – Humanities
-      { name: 'IGCSE - Humanities', icon: '📚', subjects: [
-          { name: 'English Language', code: '0500', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-igcse-english-language-0500/' },
-          { name: 'History', code: '0470', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-igcse-history-0470/' },
-          { name: 'Geography', code: '0460', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-igcse-geography-0460/' },
-          { name: 'Literature', code: '0486', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-igcse-literature-in-english-0486/' },
-      ]},
-      // IGCSE – Compulsory
-      { name: 'IGCSE - Compulsory', icon: '✅', subjects: [
-          { name: 'Urdu', code: '3247', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-igcse-urdu-as-a-first-language-3247/' },
-          { name: 'Islamiat', code: '0493', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-igcse-islamiyat-0493/' },
-          { name: 'Pakistan Studies', code: '2059', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-igcse-pakistan-studies-2059/' },
-      ]},
-      // O Level – Science
-      { name: 'O Level - Science', icon: '🔬', subjects: [
-          { name: 'Biology', code: '5090', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-o-level-biology-5090/' },
-          { name: 'Chemistry', code: '5070', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-o-level-chemistry-5070/' },
-          { name: 'Physics', code: '5054', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-o-level-physics-5054/' },
-          { name: 'Mathematics', code: '4024', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-o-level-mathematics-4024/' },
-          { name: 'Additional Mathematics', code: '4037', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-o-level-additional-mathematics-4037/' },
-      ]},
-      // O Level – Commerce
-      { name: 'O Level - Commerce', icon: '💼', subjects: [
-          { name: 'Economics', code: '2281', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-o-level-economics-2281/' },
-          { name: 'Business Studies', code: '7115', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-o-level-business-7115/' },
-          { name: 'Accounting', code: '7707', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-o-level-accounting-7707/' },
-          { name: 'Computer Science', code: '2210', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-o-level-computer-science-2210/' },
-      ]},
-      // O Level – Humanities
-      { name: 'O Level - Humanities', icon: '📚', subjects: [
-          { name: 'English Language', code: '1123', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-o-level-english-language-1123/' },
-          { name: 'History', code: '2147', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-o-level-history-2147/' },
-          { name: 'Geography', code: '2217', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-o-level-geography-2217/' },
-          { name: 'Literature', code: '2010', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-o-level-literature-in-english-2010/' },
-      ]},
-      // O Level – Compulsory
-      { name: 'O Level - Compulsory', icon: '✅', subjects: [
-          { name: 'Urdu', code: '3248', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-o-level-urdu-first-language-3248/' },
-          { name: 'Islamiat', code: '2058', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-o-level-islamiyat-2058/' },
-          { name: 'Pakistan Studies', code: '2059', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-o-level-pakistan-studies-2059/' },
-      ]},
-    ],
+      {
+        name: 'Science', icon: '🔬', subjects: [
+          { name: 'Biology', code: '9700', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-biology-9700/' },
+          { name: 'Chemistry', code: '9701', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-chemistry-9701/' },
+          { name: 'Physics', code: '9702', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-physics-9702/' },
+          { name: 'Mathematics', code: '9709', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-mathematics-9709/' },
+        ]
+      },
+      {
+        name: 'Commerce', icon: '💼', subjects: [
+          { name: 'Economics', code: '9708', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-economics-9708/' },
+          { name: 'Accounting', code: '9706', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-accounting-9706/' },
+          { name: 'Business', code: '9609', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-business-9609/' },
+        ]
+      },
+      {
+        name: 'Humanities', icon: '📚', subjects: [
+          { name: 'Psychology', code: '9990', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-psychology-9990/' },
+          { name: 'Sociology', code: '9699', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-sociology-9699/' },
+        ]
+      },
+    ]
+  },
+
+  {
+    name: 'Inter Board Karachi',
+    description: 'Board of Intermediate Education Karachi',
+    icon: '🏛️',
+    totalSubjects: 16,
+    fields: [
+      {
+        name: 'Compulsory', icon: '✅', subjects: [
+          { name: 'English', code: 'IBK-C1', syllabus: '/syllabus/biek-english.pdf' },
+          { name: 'Urdu', code: 'IBK-C2', syllabus: '/syllabus/biek-urdu.pdf' },
+          { name: 'Islamiat', code: 'IBK-C3', syllabus: '/syllabus/biek-islamiat.pdf' },
+          { name: 'Pakistan Studies', code: 'IBK-C4', syllabus: '/syllabus/biek-pakistan-studies.pdf' },
+        ]
+      },
+      {
+        name: 'Pre-Medical', icon: '⚕️', subjects: [
+          { name: 'Biology', code: 'PM101', syllabus: '/syllabus/biek-biology.pdf' },
+          { name: 'Chemistry', code: 'PM102', syllabus: '/syllabus/biek-chemistry.pdf' },
+          { name: 'Physics', code: 'PM103', syllabus: '/syllabus/biek-physics.pdf' },
+        ]
+      },
+      {
+        name: 'Pre-Engineering', icon: '⚙️', subjects: [
+          { name: 'Mathematics', code: 'PE101', syllabus: '/syllabus/biek-math.pdf' },
+          { name: 'Physics', code: 'PE102', syllabus: '/syllabus/biek-physics.pdf' },
+          { name: 'Chemistry', code: 'PE103', syllabus: '/syllabus/biek-chemistry.pdf' },
+        ]
+      },
+      {
+        name: 'Commerce', icon: '💼', subjects: [
+          { name: 'Principles of Accounting', code: 'C101', syllabus: '/syllabus/biek-accounting.pdf' },
+          { name: 'Business Math', code: 'C102', syllabus: '/syllabus/biek-business-math.pdf' },
+          { name: 'Principles of Commerce', code: 'C103', syllabus: '/syllabus/biek-commerce.pdf' },
+          { name: 'Economics', code: 'C104', syllabus: '/syllabus/biek-economics.pdf' },
+        ]
+      }
+    ]
   },
 
   {
     name: 'AKU-EB',
-    description: 'Aga Khan University Examination Board',
+    description: 'Aga Khan University Examination Board (HSSC)',
     icon: '🏛️',
-    totalSubjects: 12,
+    totalSubjects: 16,
     fields: [
-      { name: 'Compulsory', icon: '✅', subjects: [
+      {
+        name: 'Compulsory', icon: '✅', subjects: [
           { name: 'English', code: '101', syllabus: 'https://examinationboard.aku.edu/learning-materials/Publication/SSC-Compul-English.pdf' },
           { name: 'Urdu', code: '102', syllabus: 'https://examinationboard.aku.edu/learning-materials/Publication/HSSC-Compul-Urdu.pdf' },
           { name: 'Islamiat', code: '103', syllabus: 'https://examinationboard.aku.edu/learning-materials/Publication/HSSC-Compul-Islamiyat-%28U%29.pdf' },
           { name: 'Pakistan Studies', code: '104', syllabus: 'https://examinationboard.aku.edu/learning-materials/Publication/HSSC-Compul-Pak-Std.pdf' },
-      ]},
-      { name: 'Pre-Medical', icon: '⚕️', subjects: [
+        ]
+      },
+      {
+        name: 'Pre-Medical', icon: '⚕️', subjects: [
           { name: 'Biology', code: '201', syllabus: '/syllabus/aku-eb-biology.pdf' },
           { name: 'Chemistry', code: '202', syllabus: '/syllabus/aku-eb-chemistry.pdf' },
           { name: 'Physics', code: '203', syllabus: '/syllabus/aku-eb-physics.pdf' },
-      ]},
-      { name: 'Pre-Engineering', icon: '⚙️', subjects: [
+        ]
+      },
+      {
+        name: 'Pre-Engineering', icon: '⚙️', subjects: [
           { name: 'Mathematics', code: '204', syllabus: '/syllabus/aku-eb-mathematics.pdf' },
           { name: 'Physics', code: '203', syllabus: '/syllabus/aku-eb-physics.pdf' },
           { name: 'Chemistry', code: '202', syllabus: '/syllabus/aku-eb-chemistry.pdf' },
-      ]},
-      { name: 'Commerce', icon: '💼', subjects: [
+        ]
+      },
+      {
+        name: 'Commerce', icon: '💼', subjects: [
           { name: 'Accounting', code: '205', syllabus: '/syllabus/aku-eb-accounting.pdf' },
           { name: 'Business Math', code: '206', syllabus: '/syllabus/aku-eb-business-math.pdf' },
           { name: 'Economics', code: '207', syllabus: '/syllabus/aku-eb-economics.pdf' },
           { name: 'Principles of Commerce', code: '208', syllabus: '/syllabus/aku-eb-commerce.pdf' },
-      ]},
-    ],
+        ]
+      }
+    ]
   },
 
   {
     name: 'IBDP',
     description: 'International Baccalaureate Diploma Programme',
     icon: '🌎',
-    totalSubjects: 30,
+    totalSubjects: 18,
     fields: [
-      { name: 'IBDP - Group 1', icon: '📖', subjects: [
-          { name: 'Language A: Literature', code: 'Lang A Lit', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/language-and-literature/language-a-literature/' },
-          { name: 'Language A: Language and Literature', code: 'Lang A Lang & Lit', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/language-and-literature/language-a-language-and-literature/' },
-          { name: 'Literature and Performance', code: 'Lit & Perf', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/language-and-literature/literature-and-performance/' },
-      ]},
-      { name: 'IBDP - Group 2', icon: '🗣️', subjects: [
-          { name: 'Language B', code: 'Lang B', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/language-acquisition/language-b/' },
-          { name: 'Language ab initio', code: 'ab initio', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/language-acquisition/language-ab-initio/' },
-      ]},
-      { name: 'IBDP - Group 3', icon: '🏛️', subjects: [
-          { name: 'Economics', code: 'ECO', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/individuals-and-societies/economics/' },
-          { name: 'Geography', code: 'GEO', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/individuals-and-societies/geography/' },
-          { name: 'Psychology', code: 'PSY', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/individuals-and-societies/psychology/' },
-          { name: 'Social and Cultural Anthropology', code: 'ANTH', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/individuals-and-societies/social-and-cultural-anthropology/' },
-      ]},
-      { name: 'IBDP - Group 4', icon: '🔬', subjects: [
+      {
+        name: 'Group 4 - Sciences', icon: '🔬', subjects: [
           { name: 'Biology', code: 'BIO', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/sciences/' },
           { name: 'Chemistry', code: 'CHEM', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/sciences/' },
           { name: 'Physics', code: 'PHYS', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/sciences/' },
           { name: 'Computer Science', code: 'CS', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/sciences/' },
-          { name: 'Environmental Systems and Societies', code: 'ESS', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/sciences/environmental-systems-and-societies/' },
-      ]},
-      { name: 'IBDP - Group 5', icon: '🧮', subjects: [
+        ]
+      },
+      {
+        name: 'Group 3 - Individuals & Societies', icon: '🏛️', subjects: [
+          { name: 'Economics', code: 'ECO', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/individuals-and-societies/economics/' },
+          { name: 'Business Management', code: 'BUS', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/individuals-and-societies/business-management/' },
+        ]
+      },
+      {
+        name: 'Group 5 - Mathematics', icon: '🧮', subjects: [
           { name: 'Mathematics: Analysis and Approaches', code: 'Math AA', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/mathematics/' },
           { name: 'Mathematics: Applications and Interpretation', code: 'Math AI', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/mathematics/' },
-      ]},
-      { name: 'IBDP - Group 6', icon: '🎨', subjects: [
-          { name: 'Visual Arts', code: 'VA', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/the-arts/' },
-          { name: 'Music', code: 'MUS', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/the-arts/' },
-          { name: 'Theatre', code: 'THEA', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/the-arts/' },
-          { name: 'Film', code: 'FILM', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/the-arts/' },
-          { name: 'Dance', code: 'DANCE', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/the-arts/' },
-      ]},
-    ],
+        ]
+      }
+    ]
   },
 ];
-
 
 interface ExpandedBoards {
   [key: string]: boolean;
@@ -188,13 +189,13 @@ const CoursesPage: React.FC = () => {
     }));
   };
 
-  const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>): void => {
+  const handleMouseEnter = (e: React.MouseEvent<HTMLElement>): void => {
     const target = e.currentTarget;
     target.style.backgroundColor = '#FFFFFF';
     target.style.color = '#1A245D';
   };
 
-  const handleMouseLeave = (e: React.MouseEvent<HTMLButtonElement>): void => {
+  const handleMouseLeave = (e: React.MouseEvent<HTMLElement>): void => {
     const target = e.currentTarget;
     target.style.backgroundColor = 'transparent';
     target.style.color = '#FFFFFF';
@@ -216,20 +217,20 @@ const CoursesPage: React.FC = () => {
           <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white leading-tight animate-fade-in-up animation-delay-100">
             Academic Programs
           </h1>
-          <p className="text-xl md:text-2xl max-w-4xl mx-auto leading-relaxed mb-12 transition-colors duration-300 ease-in-out animate-fade-in-up animation-delay-200" style={{ color: '#BFD5FF' }}>
+          <p className="text-xl md:text-2xl max-w-4xl mx-auto leading-relaxed mb-12 transition-colors duration-300 ease-in-out" style={{ color: '#BFD5FF' }}>
             Comprehensive educational excellence across international and national examination boards
           </p>
-          <div className="flex flex-wrap justify-center gap-8 text-sm font-medium animate-fade-in-up animation-delay-300">
-            <div className="flex items-center gap-3 px-6 py-3 rounded-full border border-white/20 backdrop-blur-sm transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
-              <Users size={20} className="text-white transition-transform duration-300 ease-in-out" />
+          <div className="flex flex-wrap justify-center gap-8 text-sm font-medium">
+            <div className="flex items-center gap-3 px-6 py-3 rounded-full border border-white/20 backdrop-blur-sm" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
+              <Users size={20} className="text-white" />
               <span className="text-white">Expert Faculty</span>
             </div>
-            <div className="flex items-center gap-3 px-6 py-3 rounded-full border border-white/20 backdrop-blur-sm transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
-              <Award size={20} className="text-white transition-transform duration-300 ease-in-out" />
+            <div className="flex items-center gap-3 px-6 py-3 rounded-full border border-white/20 backdrop-blur-sm" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
+              <Award size={20} className="text-white" />
               <span className="text-white">Proven Excellence</span>
             </div>
-            <div className="flex items-center gap-3 px-6 py-3 rounded-full border border-white/20 backdrop-blur-sm transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
-              <BookOpen size={20} className="text-white transition-transform duration-300 ease-in-out" />
+            <div className="flex items-center gap-3 px-6 py-3 rounded-full border border-white/20 backdrop-blur-sm" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
+              <BookOpen size={20} className="text-white" />
               <span className="text-white">Updated Curriculum</span>
             </div>
           </div>
@@ -384,19 +385,21 @@ const CoursesPage: React.FC = () => {
               Join our community of successful students and unlock your potential with our comprehensive educational programs
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <button
-                className="px-10 py-4 rounded-xl font-semibold text-lg transition-all duration-300 ease-in-out hover:shadow-lg hover:scale-105 transform"
+              <Link
+                href="/enroll"
+                className="px-10 py-4 rounded-xl font-semibold text-lg transition-all duration-300 ease-in-out hover:shadow-lg hover:scale-105 transform inline-block"
                 style={{ backgroundColor: '#FFFFFF', color: '#1A245D' }}
               >
                 Enroll Today
-              </button>
-              <button
-                className="px-10 py-4 rounded-xl font-semibold text-lg border-2 border-white text-white transition-all duration-300 ease-in-out hover:bg-white transform hover:scale-105 hover:shadow-lg"
+              </Link>
+              <Link
+                href="/#contact"
+                className="px-10 py-4 rounded-xl font-semibold text-lg border-2 border-white text-white transition-all duration-300 ease-in-out hover:bg-white transform hover:scale-105 hover:shadow-lg inline-block"
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
               >
                 Contact Us
-              </button>
+              </Link>
             </div>
           </div>
         </div>

@@ -65,7 +65,7 @@ export const AssignmentsContent: React.FC<AssignmentsContentProps> = ({ assignme
                     return;
                 }
             }
-            const selectedClass = classes.find(c => c.id === newAssignment.classId);
+            const selectedClass = classes.find(c => c.uid === newAssignment.classId);
             const assignmentToCreate = {
                 ...newAssignment,
                 points: Number(newAssignment.points),
@@ -75,10 +75,8 @@ export const AssignmentsContent: React.FC<AssignmentsContentProps> = ({ assignme
                 submissions: 0,
                 totalStudents: selectedClass?.students || 0,
                 class: selectedClass?.name || '',
-                classId: typeof selectedClass?.id === 'string' || typeof selectedClass?.id === 'number'
-                    ? selectedClass?.id
-                    : selectedClass?.id?.toString() || '',
-                classCapacity: selectedClass?.capacity || '',
+                classId: selectedClass?.uid || '',
+                classCapacity: selectedClass?.capacity !== undefined ? String(selectedClass.capacity) : '',
             };
 
             await createAssignment(assignmentToCreate);
@@ -209,7 +207,7 @@ export const AssignmentsContent: React.FC<AssignmentsContentProps> = ({ assignme
                             >
                                 <option value="">Select Class</option>
                                 {classes.map(cls => (
-                                    <option key={cls.id?.toString()} value={cls.id?.toString()}>
+                                    <option key={cls.uid} value={cls.uid}>
                                         {cls.name} ({cls.subject}) - Capacity: {cls.capacity}
                                     </option>
                                 ))}
@@ -329,7 +327,7 @@ export const AssignmentsContent: React.FC<AssignmentsContentProps> = ({ assignme
             )}
             <div className="grid gap-4">
                 {filteredAssignments.map(assignment => {
-                    const cls = classes.find(c => c.id === assignment.classId);
+                    const cls = classes.find(c => c.uid === assignment.classId);
                     return (
                         <div key={assignment.id} className="bg-gradient-to-br from-blue-50 via-white to-indigo-100 rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-200">
                             <div className="flex justify-between items-start">

@@ -477,12 +477,12 @@ const AdminDashboard: React.FC = () => {
         if (!newClassName) return;
         setCreatingClass(true);
         try {
-            await createClass({
+            const createdClass = await createClass({
                 name: newClassName,
                 capacity: newClassCapacity,
                 students: 0,
             });
-            setClassSuccess('Class created successfully!');
+            setClassSuccess(`Class created successfully! UID: ${createdClass.uid}`);
             setNewClassName('');
             setNewClassCapacity('');
         } catch (error) {
@@ -1285,33 +1285,33 @@ const AdminDashboard: React.FC = () => {
             <div className="my-8 container mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <div className="bg-white rounded-xl p-6 shadow-lg">
 
-                <h2 className="text-xl font-bold mb-4">Create New Class</h2>
-                <div className="flex gap-4 items-end">
-                    <input
-                        type="text"
-                        placeholder="Class Name (e.g. Class 1)"
-                        value={newClassName}
-                        onChange={e => setNewClassName(e.target.value)}
-                        className="px-4 py-2 border rounded-lg"
-                    />
-                    <input
-                        type="number"
-                        placeholder="Capacity"
-                        value={newClassCapacity}
-                        onChange={e => setNewClassCapacity(e.target.value)}
-                        className="px-4 py-2 border rounded-lg"
-                    />
-                    <button
-                        onClick={handleCreateClass}
-                        disabled={creatingClass}
-                        className="px-6 py-2 bg-blue-600 text-white rounded-lg"
-                    >
-                        Create Class
-                    </button>
-                </div>
-                {classSuccess && (
-                    <div className="mt-2 text-green-600 font-medium">{classSuccess}</div>
-                )}
+                    <h2 className="text-xl font-bold mb-4">Create New Class</h2>
+                    <div className="flex gap-4 items-end">
+                        <input
+                            type="text"
+                            placeholder="Class Name (e.g. Class 1)"
+                            value={newClassName}
+                            onChange={e => setNewClassName(e.target.value)}
+                            className="px-4 py-2 border rounded-lg"
+                        />
+                        <input
+                            type="number"
+                            placeholder="Capacity"
+                            value={newClassCapacity}
+                            onChange={e => setNewClassCapacity(e.target.value)}
+                            className="px-4 py-2 border rounded-lg"
+                        />
+                        <button
+                            onClick={handleCreateClass}
+                            disabled={creatingClass}
+                            className="px-6 py-2 bg-blue-600 text-white rounded-lg"
+                        >
+                            Create Class
+                        </button>
+                    </div>
+                    {classSuccess && (
+                        <div className="mt-2 text-green-600 font-medium">{classSuccess}</div>
+                    )}
                 </div>
             </div>
             {/* Add fadeIn animation for modal */

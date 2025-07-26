@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import { Key } from "readline";
 import { db } from "./config";
 import {
   collection,
@@ -27,16 +26,11 @@ export interface Teacher {
 }
 
 export interface Class {
-  subject: ReactNode;
-  schedule: ReactNode;
-  room: ReactNode;
-  avgGrade: ReactNode;
-  id: Key | null | undefined;
-  capacity: string;
-  students: number;
+  uid?: string; // Add uid to interface
   name: string;
-  createdAt?: Date;
-  // Add other fields as needed
+  capacity: string | number;
+  students: number;
+  subject?: string;
 }
 
 export interface Assignment {
@@ -120,11 +114,20 @@ export async function getTeacherProfile(uid: string): Promise<Teacher | null> {
 }
 
 // CLASSES
-export async function createClass(data: Class) {
-  return await addDoc(collection(db, "classes"), {
-    ...data,
-    createdAt: serverTimestamp(),
-  });
+export async function createClass(classData: Class) {
+  try {
+    const classesRef = collection(db, "classes");
+    const docRef = await addDoc(classesRef, {
+      ...classData,
+      createdAt: new Date(),
+    });
+    // Update the document with its uid
+    await updateDoc(docRef, { uid: docRef.id });
+    return { ...classData, uid: docRef.id };
+  } catch (error) {
+    console.error("Error creating class:", error);
+    throw error;
+  }
 }
 
 export function listenToTeacherClasses(

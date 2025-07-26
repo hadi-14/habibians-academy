@@ -82,13 +82,11 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({ classes, ass
                     <h3 className="text-xl font-semibold text-gray-800 mb-4">Class Performance</h3>
                     <div className="space-y-3">
                         {classes.slice(0, 4).map(cls => (
-                            <div key={String(cls.id)} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div key={String(cls.uid)} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                                 <div className="flex-1">
                                     <h4 className="font-medium text-gray-800">{cls.name}</h4>
-                                    <p className="text-sm text-gray-600">{cls.schedule} • {cls.room}</p>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-sm font-medium text-gray-800">{cls.avgGrade}%</p>
                                     <p className="text-xs text-gray-500">{cls.students} students</p>
                                 </div>
                             </div>

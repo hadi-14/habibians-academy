@@ -101,23 +101,23 @@ export const StreamContent: React.FC<StreamContentProps> = ({ teacher, classes, 
                             <div className="space-y-2 max-h-40 overflow-y-auto p-2 border border-gray-200 rounded-lg">
                                 {classes.map(cls => {
                                     // Ensure cls.id is a string before using it
-                                    if (typeof cls.id !== 'string') {
-                                        console.error("Class ID is not a string:", cls.id);
+                                    if (typeof cls.uid !== 'string') {
+                                        console.error("Class ID is not a string:", cls.uid);
                                         return null; // Skip rendering if ID is invalid
                                     }
                                     return (
-                                        <label key={cls.id} className="flex items-center py-1">
+                                        <label key={cls.uid} className="flex items-center py-1">
                                             <input
                                                 type="checkbox"
                                                 className="mr-2 h-4 w-4 text-blue-600 rounded focus:ring-blue-500"
-                                                checked={newPost.targetClasses.includes(cls.id)}
+                                                checked={typeof cls.uid === 'string' ? newPost.targetClasses.includes(cls.uid) : false}
                                                 onChange={(e) => {
                                                     if (e.target.checked) {
-                                                        if (typeof cls.id === 'string') {
-                                                            setNewPost({ ...newPost, targetClasses: [...newPost.targetClasses, cls.id] });
+                                                        if (typeof cls.uid === 'string') {
+                                                            setNewPost({ ...newPost, targetClasses: [...newPost.targetClasses, cls.uid] });
                                                         }
                                                     } else {
-                                                        setNewPost({ ...newPost, targetClasses: newPost.targetClasses.filter(id => id !== cls.id) });
+                                                        setNewPost({ ...newPost, targetClasses: newPost.targetClasses.filter(id => id !== cls.uid) });
                                                     }
                                                 }}
                                             />
