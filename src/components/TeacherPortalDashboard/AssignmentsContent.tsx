@@ -1,9 +1,10 @@
 import React, { useState, useCallback } from 'react';
 import { Plus, Search, Edit, Trash2, BookOpen, Users, GraduationCap, Clock, CheckCircle, Star, Save } from 'lucide-react';
-import { createAssignment, deleteAssignment } from '@/firebase/teacher-portal';
+import { createAssignment, deleteAssignment } from '@/firebase/functions';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import Image from "next/image";
-import type { Assignment as FirebaseAssignment, Class, Teacher } from '@/firebase/teacher-portal'; // Adjust import path if needed
+import type { Assignment as FirebaseAssignment, Class, Teacher } from '@/firebase/definitions'; // Adjust import path if needed
+import { Timestamp } from 'firebase/firestore';
 
 const subjects = ['Mathematics', 'Physics', 'Chemistry', 'Biology', 'English', 'History', 'Geography'];
 
@@ -35,14 +36,18 @@ export const AssignmentsContent: React.FC<AssignmentsContentProps> = ({ assignme
     });
     const [materialFile, setMaterialFile] = useState<File | null>(null);
 
+    console.log(assignments)
+
     const filteredAssignments = assignments.filter(assignment => {
         const cls = classes.find(c => c.uid === assignment.classId);
+        // If no search/filter, show all assignments
+        if (!searchTerm && !filterSubject) return true;
         const matchesSearch =
             assignment.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             assignment.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
             (cls?.name && cls.name.toLowerCase().includes(searchTerm.toLowerCase()));
-        // const matchesStatus = !filterStatus || assignment.status === filterStatus; // filterStatus not used in state
-        return matchesSearch; // && matchesStatus;
+        const matchesSubject = !filterSubject || assignment.subject === filterSubject;
+        return matchesSearch && matchesSubject;
     });
 
     const handleCreateAssignment = useCallback(async () => {
@@ -67,6 +72,8 @@ export const AssignmentsContent: React.FC<AssignmentsContentProps> = ({ assignme
                 }
             }
             const selectedClass = classes.find(c => c.uid === newAssignment.classId);
+            // Import Timestamp from firebase/firestore
+            // import { Timestamp } from 'firebase/firestore'; (add this import at the top if not present)
             const assignmentToCreate = {
                 ...newAssignment,
                 points: Number(newAssignment.points),
@@ -75,7 +82,7 @@ export const AssignmentsContent: React.FC<AssignmentsContentProps> = ({ assignme
                 status: 'active',
                 submissions: 0,
                 classId: selectedClass?.uid || '',
-                dueDate: new Date(newAssignment.dueDate), // Convert string to Date
+                dueDate: Timestamp.fromDate(new Date(newAssignment.dueDate)), // Convert string to Firestore Timestamp
             };
 
             await createAssignment(assignmentToCreate);
@@ -215,15 +222,15 @@ export const AssignmentsContent: React.FC<AssignmentsContentProps> = ({ assignme
                                 type="date"
                                 value={
                                     editingAssignment
-                                        ? typeof editingAssignment.dueDate === 'string'
-                                            ? editingAssignment.dueDate
-                                            : editingAssignment.dueDate instanceof Date
-                                                ? editingAssignment.dueDate.toISOString()
+                                        ? (
+                                            editingAssignment.dueDate && typeof editingAssignment.dueDate.toDate === 'function'
+                                                ? editingAssignment.dueDate.toDate().toISOString().split('T')[0]
                                                 : ''
+                                        )
                                         : newAssignment.dueDate
                                 }
                                 onChange={(e) => editingAssignment
-                                    ? setEditingAssignment({ ...editingAssignment, dueDate: new Date(e.target.value) })
+                                    ? setEditingAssignment({ ...editingAssignment, dueDate: Timestamp.fromDate(new Date(e.target.value)) })
                                     : setNewAssignment({ ...newAssignment, dueDate: e.target.value })
                                 }
                                 className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -383,7 +390,7 @@ export const AssignmentsContent: React.FC<AssignmentsContentProps> = ({ assignme
                                     <div className="flex flex-wrap gap-6 text-sm text-gray-500 mt-2">
                                         <span className="flex items-center gap-1">
                                             <Clock className="w-4 h-4" />
-                                            Due: {assignment.dueDate.toISOString()} {assignment.dueTime && `at ${assignment.dueTime}`}
+                                            Due: {assignment.dueDate.toDate().toISOString().split('T')[0]} {assignment.dueTime && `at ${assignment.dueTime}`}
                                         </span>
                                         <span className="flex items-center gap-1">
                                             <CheckCircle className="w-4 h-4" />
@@ -411,7 +418,7 @@ export const AssignmentsContent: React.FC<AssignmentsContentProps> = ({ assignme
                                 </div>
                             </div>
                             <div className="mt-2 text-xs text-gray-400">
-                                Created: {assignment.createdAt ? assignment.createdAt.toISOString() : 'N/A'}
+                                Created: {assignment.createdAt ? assignment.createdAt.toDate().toLocaleString() : 'N/A'}
                             </div>
                         </div>
                     );

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Megaphone, Users, FileText, GraduationCap, Star } from 'lucide-react';
-import type { Class, Assignment } from '@/firebase/teacher-portal';
+import type { Class, Assignment } from '@/firebase/definitions';
 
 interface DashboardContentProps {
     classes: Class[];

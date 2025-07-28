@@ -9,13 +9,14 @@ import {
     updateDoc,
     doc,
     deleteDoc,
-    setDoc
+    setDoc,
+    serverTimestamp
 } from 'firebase/firestore';
 import { db, storage, auth } from '@/firebase/config';
 import Image from "next/image";
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { createClass } from '@/firebase/teacher-portal';
+import { createClass } from '@/firebase/functions';
 
 // Interfaces for type safety
 interface PersonalInfo {
@@ -277,7 +278,7 @@ const AdminDashboard: React.FC = () => {
                 phone: teacherForm.phone,
                 subjects: teacherSubjects,
                 photoURL,
-                createdAt: new Date(),
+                createdAt: serverTimestamp(),
                 uid: userCred.user.uid
             });
             setRegSuccess('Teacher registered!');
@@ -481,7 +482,6 @@ const AdminDashboard: React.FC = () => {
                 name: newClassName,
                 capacity: newClassCapacity,
                 students: 0,
-                createdAt: new Date(),
                 teacherIdList: []
             });
             setClassSuccess(`Class created successfully! UID: ${createdClass.uid}`);

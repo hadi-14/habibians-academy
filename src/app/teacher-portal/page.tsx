@@ -2,18 +2,19 @@
 import React, { useEffect, useState } from 'react';
 import { auth } from '@/firebase/config';
 import { onAuthStateChanged } from 'firebase/auth';
-import { getTeacherProfile, listenToTeacherClasses, listenToTeacherAssignments } from '@/firebase/teacher-portal';
-import type { Assignment as FirebaseAssignment, Class as FirebaseClass, Teacher as FirebaseTeacher } from '@/firebase/teacher-portal';
+import { getTeacherProfile, listenToTeacherClasses, listenToTeacherAssignments } from '@/firebase/functions';
+import type { Assignment as FirebaseAssignment, Class as FirebaseClass, Teacher as FirebaseTeacher } from '@/firebase/definitions';
 import { useProtectedRoute } from './useProtectedRoute'; // Adjust path as needed
 import { signOut } from 'firebase/auth';
-import { HeroSection } from '@/components/TeacherPortalDashboard/HeroSection';
-import { NavigationTabs } from '@/components/TeacherPortalDashboard/NavigationTabs';
+import { HeroSection } from '@/components/Common/HeroSection';
+import { NavigationTabs } from '@/components/Common/NavigationTabs';
 import { DashboardContent } from '@/components/TeacherPortalDashboard/DashboardContent';
 import { AssignmentsContent } from '@/components/TeacherPortalDashboard/AssignmentsContent';
-import { StreamContent } from '@/components/TeacherPortalDashboard/StreamContent';
+import { StreamContent } from '@/components/Common/StreamContent';
 import { MeetContent } from '@/components/TeacherPortalDashboard/MeetContent';
-import { SettingsContent } from '@/components/TeacherPortalDashboard/SettingsContent';
-import { MessageAlert } from '@/components/TeacherPortalDashboard/MessageAlert';
+import { SettingsContent } from '@/components/Common/SettingsContent';
+import { MessageAlert } from '@/components/Common/MessageAlert';
+import { BookOpen, FileText, Settings, Megaphone, Video } from 'lucide-react';
 
 export default function TeacherPortalDashboardPage() {
     useProtectedRoute();
@@ -77,7 +78,7 @@ export default function TeacherPortalDashboardPage() {
             setLoading(false);
         });
         return () => {
-            unsubClasses(); 
+            unsubClasses();
             unsubAssignments();
         };
     }, [teacher?.uid]);
@@ -97,6 +98,26 @@ export default function TeacherPortalDashboardPage() {
         await signOut(auth);
         window.location.href = '/teacher-portal/login';
     };
+
+    const tabs = React.useMemo(() => [
+        { key: 'dashboard', label: 'Dashboard', icon: <BookOpen className="w-5 h-5 inline mr-2" /> },
+        { key: 'assignments', label: 'Assignments', icon: <FileText className="w-5 h-5 inline mr-2" />, badge: assignments.length },
+        { key: 'stream', label: 'Stream', icon: <Megaphone className="w-5 h-5 inline mr-2" /> },
+        { key: 'meet', label: 'Meet', icon: <Video className="w-5 h-5 inline mr-2" /> },
+        { key: 'settings', label: 'Settings', icon: <Settings className="w-5 h-5 inline mr-2" /> },
+    ], [assignments.length]);
+
+    useEffect(() => {
+        if (!isClient) return; // Wait for client-side hydration
+
+        const hash = window.location.hash.slice(1);
+        const validTabs = tabs.map(tab => tab.key);
+
+        if (hash && validTabs.includes(hash)) {
+            setActiveTab(hash);
+        }
+    }, [isClient, tabs]);
+
 
     if (loading && !teacher) {
         return (
@@ -120,13 +141,17 @@ export default function TeacherPortalDashboardPage() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-            <HeroSection teacher={teacher} onLogout={handleLogout} />
+            <HeroSection user={teacher} onLogout={handleLogout} />
             {success && <MessageAlert type="success" message={success} onClose={() => setSuccess('')} />}
             <div className="container mx-auto px-4 pb-8">
-                <NavigationTabs activeTab={activeTab} setActiveTab={setActiveTab} assignmentsCount={assignments.length} />
+                <NavigationTabs
+                    activeTab={activeTab}
+                    setActiveTab={setActiveTab}
+                    tabs={tabs}
+                />
                 <div className="mb-8">
                     {activeTab === 'dashboard' && <DashboardContent classes={classes} assignments={assignments} />}
-                    {activeTab === 'stream' && <StreamContent teacher={teacher} classes={classes} setSuccess={setSuccess} />}
+                    {activeTab === 'stream' && <StreamContent user={teacher} classes={classes} setSuccess={setSuccess} />}
                     {activeTab === 'assignments' && (
                         <AssignmentsContent
                             assignments={assignments}
@@ -138,7 +163,7 @@ export default function TeacherPortalDashboardPage() {
                         />
                     )}
                     {activeTab === 'meet' && <MeetContent classes={classes} setSuccess={setSuccess} />}
-                    {activeTab === 'settings' && <SettingsContent teacher={teacher} />}
+                    {activeTab === 'settings' && <SettingsContent user={teacher} />}
                 </div>
             </div>
         </div>

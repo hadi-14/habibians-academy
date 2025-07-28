@@ -1,13 +1,13 @@
 // components/TeacherPortalDashboard/SettingsContent.tsx
 import React from 'react';
 import { FileText, Users, Settings } from 'lucide-react';
-import type { Teacher } from '@/firebase/teacher-portal';
+import type { Student, Teacher } from '@/firebase/definitions';
 
 interface SettingsContentProps {
-    teacher: Teacher;
+    user: Teacher | Student;
 }
 
-export const SettingsContent: React.FC<SettingsContentProps> = ({ teacher }) => {
+export const SettingsContent: React.FC<SettingsContentProps> = ({ user }) => {
     return (
         <div className="space-y-6">
             <h2 className="text-2xl font-bold text-gray-800">Settings</h2>
@@ -19,7 +19,7 @@ export const SettingsContent: React.FC<SettingsContentProps> = ({ teacher }) => 
                             <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
                             <input
                                 type="text"
-                                value={teacher.name || ''}
+                                value={user.name || ''}
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 readOnly
                             />
@@ -28,7 +28,7 @@ export const SettingsContent: React.FC<SettingsContentProps> = ({ teacher }) => 
                             <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
                             <input
                                 type="email"
-                                value={teacher.email || ''}
+                                value={user.email || ''}
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 readOnly
                             />
