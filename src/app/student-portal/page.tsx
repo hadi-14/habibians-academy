@@ -11,10 +11,11 @@ import AssignmentsTab from '@/components/StudentPortalDashboard/AssignmentsConte
 import DashboardTab from '@/components/StudentPortalDashboard/DashboardContent';
 import { HeroSection } from '@/components/Common/HeroSection';
 import { NavigationTabs } from '@/components/Common/NavigationTabs';
-import { BookOpen, FileText, Megaphone, Settings } from 'lucide-react';
+import { BookOpen, FileText, Megaphone, Settings, Video } from 'lucide-react';
 import React from 'react';
 import { StreamContent } from '@/components/Common/StreamContent';
 import { SettingsContent } from '@/components/Common/SettingsContent';
+import MeetContent from '@/components/StudentPortalDashboard/MeetContent';
 
 
 export default function DashboardPage() {
@@ -192,6 +193,7 @@ export default function DashboardPage() {
     { key: 'dashboard', label: 'Dashboard', icon: <BookOpen className="w-5 h-5 inline mr-2" /> },
     { key: 'assignments', label: 'Assignments', icon: <FileText className="w-5 h-5 inline mr-2" />, badge: assignments.length },
     { key: 'stream', label: 'Stream', icon: <Megaphone className="w-5 h-5 inline mr-2" /> },
+    { key: 'meet', label: 'Meet', icon: <Video className="w-5 h-5 inline mr-2" /> },
     { key: 'settings', label: 'Settings', icon: <Settings className="w-5 h-5 inline mr-2" /> },
   ], [assignments.length]);
 
@@ -225,47 +227,38 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="w-full bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20 min-h-screen font-sans">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20">
       {/* Compact Hero Section */}
       <HeroSection user={student} onLogout={handleLogout} />
-      {/* Tabs Navigation */}
-      <div className="max-w-7xl mx-auto px-4 pt-6">
+
+      {/* Tab Panels */}
+      <div className="container mx-auto px-4 pb-8">
+        {/* Tabs Navigation */}
         <NavigationTabs
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           tabs={tabs}
         />
-      </div>
 
-      {/* Tab Panels */}
-      <div className="max-w-7xl mx-auto px-4 py-4">
-        {activeTab === 'dashboard' && (
-          <DashboardTab
-            student={student}
-            assignments={assignments}
-            classes={classes}
-            todayMeetings={todayMeetings}
-            calendarMeetings={calendarMeetings}
-            attendance={attendance}
-            teacherNames={teacherNames}
-            currentDate={currentDate}
-            onNavigateMonth={navigateMonth}
-          />
-        )}
-
-        {activeTab === 'assignments' && (
-          <AssignmentsTab
-            assignments={assignments}
-          />
-        )}
-
-        {activeTab === 'stream' && (
-          <StreamContent user={student} classes={classes} setSuccess={setSuccess} />
-        )}
-
-        {activeTab === 'settings' && (
-          <SettingsContent user={student} /> // Use student as teacher prop for now
-        )}
+        <div className="mb-8">
+          {activeTab === 'dashboard' && (
+            <DashboardTab
+              student={student}
+              assignments={assignments}
+              classes={classes}
+              todayMeetings={todayMeetings}
+              calendarMeetings={calendarMeetings}
+              attendance={attendance}
+              teacherNames={teacherNames}
+              currentDate={currentDate}
+              onNavigateMonth={navigateMonth}
+            />
+          )}
+          {activeTab === 'assignments' && (<AssignmentsTab assignments={assignments} />)}
+          {activeTab === 'stream' && (<StreamContent user={student} classes={classes} setSuccess={setSuccess} />)}
+          {activeTab === 'meet' && <MeetContent classes={classes} />}
+          {activeTab === 'settings' && (<SettingsContent user={student} />)}
+        </div>
       </div>
     </div>
   );

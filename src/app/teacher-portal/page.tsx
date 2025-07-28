@@ -140,7 +140,7 @@ export default function TeacherPortalDashboardPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20">
             <HeroSection user={teacher} onLogout={handleLogout} />
             {success && <MessageAlert type="success" message={success} onClose={() => setSuccess('')} />}
             <div className="container mx-auto px-4 pb-8">
