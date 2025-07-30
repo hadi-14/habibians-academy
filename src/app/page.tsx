@@ -38,13 +38,7 @@ export default function Home() {
     <div className="grid grid-rows-[auto_1fr_auto] items-center justify-items-center min-h-screen font-body overflow-x-hidden">
       <main className="flex flex-col items-center sm:items-start w-full">
         <div className="p-8 w-full relative" id="hero">
-          {/* AKU-EB Affiliation Stamp */}
-          <div className="absolute top-4 right-4 z-20 flex items-center gap-2 bg-white/90 border-2 border-green-500 rounded-full shadow-xl px-4 py-2 ring-2 ring-green-400">
-            <Image src="/affiliates/AKU.jpg" alt="AKU-EB Logo" width={36} height={36} className="object-contain" />
-            <span className="font-heading font-bold text-green-700 text-base md:text-lg tracking-wide drop-shadow">
-              Affiliated with AKU-EB
-            </span>
-          </div>
+
           <BackDesign>
 
             <CreativeDoodleBackground doodleCount={0} className="bg-primary-silver h-full w-full rounded-xl border-b-4 border-accent-navy">

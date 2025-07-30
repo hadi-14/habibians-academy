@@ -2,19 +2,25 @@
 import React, { useEffect, useState } from 'react';
 import { auth } from '@/firebase/config';
 import { onAuthStateChanged } from 'firebase/auth';
-import { getTeacherProfile, listenToTeacherClasses, listenToTeacherAssignments } from '@/firebase/functions';
+import {
+    getTeacherProfile,
+    listenToTeacherClasses,
+    listenToTeacherAssignments,
+    onCreateAssignment,
+    onUpdateAssignment
+} from '@/firebase/functions';
 import type { Assignment as FirebaseAssignment, Class as FirebaseClass, Teacher as FirebaseTeacher } from '@/firebase/definitions';
 import { useProtectedRoute } from './useProtectedRoute'; // Adjust path as needed
 import { signOut } from 'firebase/auth';
 import { HeroSection } from '@/components/Common/HeroSection';
 import { NavigationTabs } from '@/components/Common/NavigationTabs';
 import { DashboardContent } from '@/components/TeacherPortalDashboard/DashboardContent';
-import { AssignmentsContent } from '@/components/TeacherPortalDashboard/AssignmentsContent';
 import { StreamContent } from '@/components/Common/StreamContent';
 import { MeetContent } from '@/components/TeacherPortalDashboard/MeetContent';
 import { SettingsContent } from '@/components/Common/SettingsContent';
 import { MessageAlert } from '@/components/Common/MessageAlert';
 import { BookOpen, FileText, Settings, Megaphone, Video } from 'lucide-react';
+import AssignmentsTab from '@/components/Common/AssignmentsContent';
 
 export default function TeacherPortalDashboardPage() {
     useProtectedRoute();
@@ -153,13 +159,12 @@ export default function TeacherPortalDashboardPage() {
                     {activeTab === 'dashboard' && <DashboardContent classes={classes} assignments={assignments} />}
                     {activeTab === 'stream' && <StreamContent user={teacher} classes={classes} setSuccess={setSuccess} />}
                     {activeTab === 'assignments' && (
-                        <AssignmentsContent
+                        <AssignmentsTab
                             assignments={assignments}
-                            classes={classes}
-                            teacher={teacher}
-                            setSuccess={setSuccess}
-                            setLoading={setLoading}
-                            setAssignments={setAssignments} // For update/delete
+                            userRole='teacher'
+                            currentUserId={teacher.uid}
+                            onCreateAssignment={onCreateAssignment}
+                            onUpdateAssignment={onUpdateAssignment}
                         />
                     )}
                     {activeTab === 'meet' && <MeetContent classes={classes} setSuccess={setSuccess} />}

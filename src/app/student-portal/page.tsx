@@ -7,7 +7,7 @@ import { getStudentProfile, listenToStudentAssignments, listenToStudentClasses, 
 import type { Assignment as FirebaseAssignment, Class as FirebaseClass, Student as FirebaseStudent, Meeting } from '@/firebase/definitions';
 import { db } from '@/firebase/config';
 import { getDoc, doc } from "firebase/firestore";
-import AssignmentsTab from '@/components/StudentPortalDashboard/AssignmentsContent';
+import AssignmentsTab from '@/components/Common/AssignmentsContent';
 import DashboardTab from '@/components/StudentPortalDashboard/DashboardContent';
 import { HeroSection } from '@/components/Common/HeroSection';
 import { NavigationTabs } from '@/components/Common/NavigationTabs';
@@ -254,7 +254,7 @@ export default function DashboardPage() {
               onNavigateMonth={navigateMonth}
             />
           )}
-          {activeTab === 'assignments' && (<AssignmentsTab assignments={assignments} />)}
+          {activeTab === 'assignments' && (<AssignmentsTab assignments={assignments} currentUserId={student.uid} />)}
           {activeTab === 'stream' && (<StreamContent user={student} classes={classes} setSuccess={setSuccess} />)}
           {activeTab === 'meet' && <MeetContent classes={classes} />}
           {activeTab === 'settings' && (<SettingsContent user={student} />)}
