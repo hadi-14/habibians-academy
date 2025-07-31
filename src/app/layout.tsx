@@ -27,7 +27,40 @@ export const metadata: Metadata = {
     },
   ],
   icons: "favicon.ico",
-  keywords: ["Habibians' Academy", "habibians-academy", "college", "education", "coaching", "online school"],
+  keywords: [
+    "Habibians' Academy", "habibians-academy", "college", "education", "coaching", "online school",
+    "ASJ-ERDC", "Blooms’ Schooling System", "ASJ-Cradle of Wisdom", "Sir Abdul Samad Jamal"
+  ],
+  openGraph: {
+    title: "Habibian's Academy",
+    description: "Empowering the next generation with innovative skills and modern teaching methods.",
+    url: process.env.NEXT_PUBLIC_URL || "https://habibians-academy.com",
+    siteName: "Habibian's Academy",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Habibian's Academy Logo"
+      }
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Habibian's Academy",
+    description: "Empowering the next generation with innovative skills and modern teaching methods.",
+    images: ["/og-image.png"],
+    site: "@habibiansacademy",
+    creator: "@habibiansacademy"
+  },
+  alternates: {
+    canonical: process.env.NEXT_PUBLIC_URL || "https://habibians-academy.com"
+  },
+  other: {
+    "facebook-page": "https://facebook.com/HabibiansAcademy"
+  }
 };
 
 export default function RootLayout({
@@ -37,6 +70,24 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* SEO Meta Tags */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Habibian's Academy" />
+        <meta property="og:description" content="Empowering the next generation with innovative skills and modern teaching methods." />
+        <meta property="og:image" content="/og-image.png" />
+        <meta property="og:url" content={process.env.NEXT_PUBLIC_URL || "https://habibians-academy.com"} />
+        <meta property="og:site_name" content="Habibian's Academy" />
+        <meta property="fb:page_id" content="HabibiansAcademy" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Habibian's Academy" />
+        <meta name="twitter:description" content="Empowering the next generation with innovative skills and modern teaching methods." />
+        <meta name="twitter:image" content="/og-image.png" />
+        <meta name="twitter:site" content="@habibiansacademy" />
+        <meta name="twitter:creator" content="@habibiansacademy" />
+        <link rel="canonical" href={process.env.NEXT_PUBLIC_URL || "https://habibians-academy.com"} />
+        <meta name="facebook-page" content="https://facebook.com/HabibiansAcademy" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-primary-white text-primary-black font-body min-h-screen flex flex-col`}
       >
