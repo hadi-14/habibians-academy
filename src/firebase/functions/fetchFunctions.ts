@@ -184,7 +184,7 @@ export async function getStudentSubmissions(
     const q = query(
       collection(db, "submissions"),
       where("studentId", "==", studentId),
-      orderBy("submittedAt", "desc")
+      orderBy("submittedAt")
     );
     const snapshot = await getDocs(q);
     return snapshot.docs.map((doc) => ({

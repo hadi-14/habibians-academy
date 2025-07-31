@@ -165,6 +165,7 @@ export default function TeacherPortalDashboardPage() {
                             currentUserId={teacher.uid}
                             onCreateAssignment={onCreateAssignment}
                             onUpdateAssignment={onUpdateAssignment}
+                            teacherSubjects={teacher.subjects}
                         />
                     )}
                     {activeTab === 'meet' && <MeetContent classes={classes} setSuccess={setSuccess} />}

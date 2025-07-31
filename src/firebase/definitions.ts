@@ -72,6 +72,8 @@ export interface Class {
 }
 
 export interface Assignment {
+  grade: string;
+  feedback: string;
   uid?: string;
   classId: string | number | readonly string[] | undefined;
   dueTime: string | number | readonly string[] | undefined;

@@ -254,7 +254,7 @@ export default function DashboardPage() {
               onNavigateMonth={navigateMonth}
             />
           )}
-          {activeTab === 'assignments' && (<AssignmentsTab assignments={assignments} currentUserId={student.uid} />)}
+          {activeTab === 'assignments' && (<AssignmentsTab assignments={assignments} userRole='student' currentUserId={student.uid} />)}
           {activeTab === 'stream' && (<StreamContent user={student} classes={classes} setSuccess={setSuccess} />)}
           {activeTab === 'meet' && <MeetContent classes={classes} />}
           {activeTab === 'settings' && (<SettingsContent user={student} />)}

@@ -8,6 +8,7 @@ import {
   doc,
   orderBy,
   query,
+  getFirestore,
 } from "firebase/firestore";
 import type { Subject } from "../definitions";
 
@@ -37,4 +38,12 @@ export async function updateSubject(
 
 export async function deleteSubject(id: string): Promise<void> {
   await deleteDoc(doc(db, SUBJECTS_COLLECTION, id));
+}
+
+// Fetches all subjects from the "subjects" collection in Firestore
+export async function getSubjects(): Promise<string[]> {
+  const db = getFirestore();
+  const snapshot = await getDocs(collection(db, "subjects"));
+  // Assumes each subject doc has a "name" field
+  return snapshot.docs.map((doc) => doc.data().name as string).filter(Boolean);
 }
