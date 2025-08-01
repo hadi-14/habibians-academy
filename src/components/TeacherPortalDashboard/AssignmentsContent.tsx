@@ -84,6 +84,8 @@ export const AssignmentsContent: React.FC<AssignmentsContentProps> = ({ assignme
                 classId: selectedClass?.uid || '',
                 dueDate: Timestamp.fromDate(new Date(newAssignment.dueDate)), // Convert string to Firestore Timestamp
                 createdBy: teacher.uid ?? '', // Add createdBy property
+                grade: '', // Default value for grade
+                feedback: '', // Default value for feedback
             };
 
             await createAssignment(assignmentToCreate);

@@ -59,11 +59,11 @@ const AdminDashboard: React.FC = () => {
                 try {
                     const q = query(
                         collection(db, 'admissions'),
-                        orderBy('applicationDate', 'desc')
+                        orderBy('submittedAt')
                     );
                     const querySnapshot = await getDocs(q);
                     const entries = querySnapshot.docs.map(doc => ({
-                        id: doc.id,
+                        uid: doc.id,
                         ...doc.data()
                     } as AdmissionEntry));
                     setAdmissionEntries(entries);
@@ -266,7 +266,7 @@ const AdminDashboard: React.FC = () => {
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm font-medium text-gray-600">Approved</p>
-                                <p className="text-3xl font-bold text-emerald-600">{admissionEntries.filter(e => e.applicationStatus === 'approved').length}</p>
+                                <p className="text-3xl font-bold text-emerald-600">{admissionEntries.filter(e => e.applicationStatus === 'accepted').length}</p>
                             </div>
                             <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
                                 <CheckCircle className="w-6 h-6 text-emerald-600" />

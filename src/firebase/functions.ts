@@ -12,7 +12,7 @@ import {
   updateAssignment,
   submitAssignment,
 } from "./functions/editFunctions";
-import type { Assignment, Submission } from "./definitions";
+import type { Assignment, Subject, Submission } from "./definitions";
 import {
   getFirestore,
   doc,
@@ -182,4 +182,37 @@ export async function uploadMaterialFile(file: File): Promise<string> {
       }
     );
   });
+}
+
+// Fetch all subjects from Firestore "subjects" collection
+export async function getSubjects(): Promise<Subject[]> {
+  const db = getFirestore();
+  const subjectsRef = collection(db, "subjects");
+  const snapshot = await getDocs(subjectsRef);
+  return snapshot.docs.map((doc) => {
+    const data = doc.data();
+    return {
+      uid: doc.id,
+      name: data.name,
+      code: data.code,
+      board: data.board,
+      level: data.level,
+      ...data,
+    } as Subject;
+  });
+}
+
+/**
+ * Get the subject name by its ID from the "subjects" collection.
+ * Returns the subject name if found, otherwise returns the ID.
+ */
+export async function getSubjectNameById(subjectId: string): Promise<string> {
+  if (!subjectId) return "";
+  const db = getFirestore();
+  const subjectDoc = await getDoc(doc(db, "subjects", subjectId));
+  if (subjectDoc.exists()) {
+    const data = subjectDoc.data();
+    return data.name || subjectId;
+  }
+  return subjectId;
 }

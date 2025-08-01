@@ -114,32 +114,16 @@ export interface Meeting {
   CreatedBy: string;
 }
 
-interface PersonalInfo {
-  name: string;
-  email: string;
-  phoneNo: string;
-  gender: string;
-}
-
-interface ProgramPreferences {
-  desiredClass: string;
-  stream: string;
-  careerGoals: string;
-  reasonForJoining: string;
-}
-
 export interface AdmissionEntry {
-  id: string;
-  personalInfo: PersonalInfo;
-  applicationStatus: "pending" | "approved" | "rejected";
-  applicationDate: {
-    seconds: number;
-    nanoseconds: number;
-  };
-  programPreferences: ProgramPreferences;
-  documents?: {
-    profilePicture?: string;
-    characterCertificate?: string;
-    previousMarksheets?: string[];
-  };
+  uid?: string;
+  name: string;
+  fatherName: string;
+  contact: string;
+  email: string;
+  residence: string;
+  subjects: string[];
+  currentEducation: string;
+  preferredSchedule: string;
+  submittedAt: Timestamp;
+  applicationStatus?: "pending" | "accepted" | "rejected";
 }

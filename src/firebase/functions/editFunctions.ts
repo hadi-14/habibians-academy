@@ -174,3 +174,8 @@ export async function createPost(data: Omit<Post, "uid" | "createdAt">) {
     createdAt: serverTimestamp(),
   });
 }
+
+export async function updateAdmissionStatus(id: string, status: string) {
+    const entryRef = doc(db, 'admissions', id);
+    await updateDoc(entryRef, { applicationStatus: status });
+}
