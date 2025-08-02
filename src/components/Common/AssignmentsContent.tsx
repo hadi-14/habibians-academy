@@ -481,7 +481,10 @@ export default function AssignmentsTab({
   const [subjects, setSubjects] = useState<string[]>([]);
 
   useEffect(() => {
-    getSubjects().then(setSubjects);
+    getSubjects().then((subjectsArr) => {
+      // If Subject has a 'name' property, use it; otherwise, adjust as needed
+      setSubjects(subjectsArr.map(sub => typeof sub === 'string' ? sub : sub.name));
+    });
   }, []);
 
   // Filtered subjects for dropdown
