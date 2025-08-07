@@ -48,7 +48,7 @@ export const StreamContent: React.FC<StreamContentProps> = ({ user, classes, set
     }, [classes]);
 
     // Function to get meeting status
-    const getMeetingStatus = (meetingTime: any) => {
+    const getMeetingStatus = (meetingTime: { toDate: () => Date } | null | undefined) => {
         if (!meetingTime?.toDate) return 'upcoming';
         
         const now = new Date();
@@ -196,7 +196,6 @@ export const StreamContent: React.FC<StreamContentProps> = ({ user, classes, set
                     return allPosts.length > 0 ? (
                         allPosts.map(post => {
                             const isOngoing = post.type === 'meeting' && post.status === 'ongoing';
-                            const isUpcoming = post.type === 'meeting' && post.status === 'upcoming';
                             
                             return (
                                 <div key={post.uid} className={`bg-white rounded-xl p-6 shadow-lg border ${
