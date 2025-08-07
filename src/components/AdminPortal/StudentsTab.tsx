@@ -438,7 +438,7 @@ const StudentsTab: React.FC<StudentsTabProps> = ({ students, setStudents }) => {
                                 >
                                     <option value="">Select Class</option>
                                     {classes.map(cls => (
-                                        <option key={cls.uid} value={cls.name}>{cls.name}</option>
+                                        <option key={cls.uid} value={cls.uid}>{cls.name}</option>
                                     ))}
                                 </select>
                             </div>
