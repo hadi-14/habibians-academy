@@ -3,8 +3,7 @@ export * from "./functions/subjectFunctions";
 export * from "./functions/fetchFunctions";
 export * from "./functions/editFunctions";
 export * from "./functions/listenFunctions";
-// Handler and glue functions below (if any)
-// Handler and glue functions
+
 
 import { getStudentProfile } from "./functions/fetchFunctions";
 import {

@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 interface Subject {
   name: string;
-  code: string;
+  code?: string;
   syllabus: string;
 }
 
@@ -25,142 +25,113 @@ interface Board {
 
 const boards: Board[] = [
   {
-    name: 'CAIE',
-    description: 'Cambridge International A Level (Minimum 3 subjects required)',
-    icon: '🎓',
-    totalSubjects: 12,
+    name: "CAIE",
+    description: "Cambridge International A Level (Minimum 3 subjects required)",
+    icon: "🎓",
+    totalSubjects: 17,
     fields: [
       {
-        name: 'Science', icon: '🔬', subjects: [
-          { name: 'Biology', code: '9700', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-biology-9700/' },
-          { name: 'Chemistry', code: '9701', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-chemistry-9701/' },
-          { name: 'Physics', code: '9702', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-physics-9702/' },
-          { name: 'Mathematics', code: '9709', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-mathematics-9709/' },
+        name: "Commerce",
+        icon: "💼",
+        subjects: [
+          { name: "Accounting", code: "9706", syllabus: "https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-accounting-9706/" },
+          { name: "Business", code: "9609", syllabus: "https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-business-9609/" },
+          { name: "Economics", code: "9708", syllabus: "https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-economics-9708/" },
         ]
       },
       {
-        name: 'Commerce', icon: '💼', subjects: [
-          { name: 'Economics', code: '9708', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-economics-9708/' },
-          { name: 'Accounting', code: '9706', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-accounting-9706/' },
-          { name: 'Business', code: '9609', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-business-9609/' },
+        name: "Optional",
+        icon: "📚",
+        subjects: [
+          { name: "English", code: "9093", syllabus: "https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-english-language-9093/" },
+          { name: "Geography", code: "9696", syllabus: "https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-geography-9696/" },
+          { name: "History", code: "9489", syllabus: "https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-history-9489/" },
+          { name: "Law", code: "9084", syllabus: "https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-law-9084/" },
+          { name: "Further Mathemetics", code: "9231", syllabus: "https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-mathematics-further-9231/" },
+          { name: "Psychology", code: "9990", syllabus: "https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-psychology-9990/" },
+          { name: "Sociology", code: "9699", syllabus: "https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-sociology-9699/" },
+          { name: "Urdu", code: "9686", syllabus: "https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-urdu-pakistan-only-9686/" },
+          { name: "Islamiat", code: "9488", syllabus: "https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-islamic-studies-9488/" }
         ]
       },
       {
-        name: 'Humanities', icon: '📚', subjects: [
-          { name: 'Psychology', code: '9990', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-psychology-9990/' },
-          { name: 'Sociology', code: '9699', syllabus: 'https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-sociology-9699/' },
-        ]
-      },
-    ]
-  },
-
-  {
-    name: 'Inter Board Karachi',
-    description: 'Board of Intermediate Education Karachi',
-    icon: '🏛️',
-    totalSubjects: 16,
-    fields: [
-      {
-        name: 'Compulsory', icon: '✅', subjects: [
-          { name: 'English', code: 'IBK-C1', syllabus: '/syllabus/biek-english.pdf' },
-          { name: 'Urdu', code: 'IBK-C2', syllabus: '/syllabus/biek-urdu.pdf' },
-          { name: 'Islamiat', code: 'IBK-C3', syllabus: '/syllabus/biek-islamiat.pdf' },
-          { name: 'Pakistan Studies', code: 'IBK-C4', syllabus: '/syllabus/biek-pakistan-studies.pdf' },
+        name: "Pre-Engineering",
+        icon: "⚙️",
+        subjects: [
+          { name: "Computer Science", code: "9618", syllabus: "https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-computer-science-9618/" },
+          { name: "Mathematics", code: "9709", syllabus: "https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-mathematics-9709/" },
+          { name: "Physics", code: "9702", syllabus: "https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-physics-9702/" },
         ]
       },
       {
-        name: 'Pre-Medical', icon: '⚕️', subjects: [
-          { name: 'Biology', code: 'PM101', syllabus: '/syllabus/biek-biology.pdf' },
-          { name: 'Chemistry', code: 'PM102', syllabus: '/syllabus/biek-chemistry.pdf' },
-          { name: 'Physics', code: 'PM103', syllabus: '/syllabus/biek-physics.pdf' },
+        name: "Pre-Engineering ",
+        icon: "⚙️",
+        subjects: [
+          { name: "Chemistry", code: "9701", syllabus: "https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-chemistry-9701/" },
         ]
       },
       {
-        name: 'Pre-Engineering', icon: '⚙️', subjects: [
-          { name: 'Mathematics', code: 'PE101', syllabus: '/syllabus/biek-math.pdf' },
-          { name: 'Physics', code: 'PE102', syllabus: '/syllabus/biek-physics.pdf' },
-          { name: 'Chemistry', code: 'PE103', syllabus: '/syllabus/biek-chemistry.pdf' },
-        ]
-      },
-      {
-        name: 'Commerce', icon: '💼', subjects: [
-          { name: 'Principles of Accounting', code: 'C101', syllabus: '/syllabus/biek-accounting.pdf' },
-          { name: 'Business Math', code: 'C102', syllabus: '/syllabus/biek-business-math.pdf' },
-          { name: 'Principles of Commerce', code: 'C103', syllabus: '/syllabus/biek-commerce.pdf' },
-          { name: 'Economics', code: 'C104', syllabus: '/syllabus/biek-economics.pdf' },
+        name: "Science ",
+        icon: "🔬",
+        subjects: [
+          { name: "Biology", code: "9700", syllabus: "https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-biology-9700/" },
+          { name: "Chemistry", code: "9701", syllabus: "https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-chemistry-9701/" },
+          { name: "Physics", code: "9702", syllabus: "https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-physics-9702/" },
         ]
       }
     ]
   },
 
   {
-    name: 'AKU-EB',
-    description: 'Aga Khan University Examination Board (HSSC)',
-    icon: '🏛️',
-    totalSubjects: 16,
+    name: "AKU-EB",
+    description: "Aga Khan University Examination Board (HSSC)",
+    icon: "🏛️",
+    totalSubjects: 14,
     fields: [
       {
-        name: 'Compulsory', icon: '✅', subjects: [
-          { name: 'English', code: '101', syllabus: 'https://examinationboard.aku.edu/learning-materials/Publication/SSC-Compul-English.pdf' },
-          { name: 'Urdu', code: '102', syllabus: 'https://examinationboard.aku.edu/learning-materials/Publication/HSSC-Compul-Urdu.pdf' },
-          { name: 'Islamiat', code: '103', syllabus: 'https://examinationboard.aku.edu/learning-materials/Publication/HSSC-Compul-Islamiyat-%28U%29.pdf' },
-          { name: 'Pakistan Studies', code: '104', syllabus: 'https://examinationboard.aku.edu/learning-materials/Publication/HSSC-Compul-Pak-Std.pdf' },
+        name: "Commerce",
+        icon: "💼",
+        subjects: [
+          { name: "Accounting ", syllabus: "https://examinationboard.aku.edu/about-us/SyllabiList/Principles%20of%20Accounting%20XI-XI%20Syllabus%202022.pdf" },
+          { name: "Business Mathematics ", syllabus: "https://examinationboard.aku.edu/about-us/SyllabiList/Business%20Mathematics%20and%20Business%20Statistics%20HSSC%20I%20Syllabus%202022.pdf" },
+          { name: "Principal of Commerce ", syllabus: "https://examinationboard.aku.edu/about-us/SyllabiList/Principles%20of%20Commerce%20HSSC%20Syllabus%202022.pdf" },
+          { name: "Principal of Economics", syllabus: "https://examinationboard.aku.edu/about-us/SyllabiList/Principles%20of%20Economics%20XI%20Syllabus.pdf" },
+          { name: "Statistics ", syllabus: "https://examinationboard.aku.edu/about-us/SyllabiList/Statistics%20HSSC%20I%20Syllabus%202022.pdf" }
         ]
       },
       {
-        name: 'Pre-Medical', icon: '⚕️', subjects: [
-          { name: 'Biology', code: '201', syllabus: '/syllabus/aku-eb-biology.pdf' },
-          { name: 'Chemistry', code: '202', syllabus: '/syllabus/aku-eb-chemistry.pdf' },
-          { name: 'Physics', code: '203', syllabus: '/syllabus/aku-eb-physics.pdf' },
+        name: "Compulsory",
+        icon: "✅",
+        subjects: [
+          { name: "English", syllabus: "https://examinationboard.aku.edu/about-us/SyllabiList/Urdu%20Anthology%20HSSC-I%20Final.pdf" },
+          { name: "Pakistan Studies ", syllabus: "https://examinationboard.aku.edu/about-us/SyllabiList/Pakistan%20Studies%20XI-XII%20Syllabus%202022%20(H2).pdf" },
+          { name: "Urdu", syllabus: "https://examinationboard.aku.edu/about-us/SyllabiList/Urdu%20Compulsory%20HSSC%20Syllabus%202025.pdf" },
+          { name: "Islamiyat", syllabus: "https://examinationboard.aku.edu/about-us/SyllabiList/Islamic%20Studies%20Syllabus%20HSSC%20Syllabus%202022.pdf" }
         ]
       },
       {
-        name: 'Pre-Engineering', icon: '⚙️', subjects: [
-          { name: 'Mathematics', code: '204', syllabus: '/syllabus/aku-eb-mathematics.pdf' },
-          { name: 'Physics', code: '203', syllabus: '/syllabus/aku-eb-physics.pdf' },
-          { name: 'Chemistry', code: '202', syllabus: '/syllabus/aku-eb-chemistry.pdf' },
+        name: "Pre-Engineering",
+        icon: "⚙️",
+        subjects: [
+          { name: "Mathematics", syllabus: "https://examinationboard.aku.edu/about-us/SyllabiList/Mathematics%20HSSC%20I%20Syllabus%202025.pdf" },
+          { name: "Chemistry", syllabus: "https://examinationboard.aku.edu/about-us/SyllabiList/Chemistry%20HSSC%20I%20Syllabus%202025.pdf" },
+          { name: "Computer Science", syllabus: "https://examinationboard.aku.edu/about-us/SyllabiList/Computer%20Science%20HSSC%20Syllabus%202025.pdf" },
+          { name: "Physics", syllabus: "https://examinationboard.aku.edu/about-us/SyllabiList/Physics%20HSSC%20I%20Syllabus%202025.pdf" }
         ]
       },
       {
-        name: 'Commerce', icon: '💼', subjects: [
-          { name: 'Accounting', code: '205', syllabus: '/syllabus/aku-eb-accounting.pdf' },
-          { name: 'Business Math', code: '206', syllabus: '/syllabus/aku-eb-business-math.pdf' },
-          { name: 'Economics', code: '207', syllabus: '/syllabus/aku-eb-economics.pdf' },
-          { name: 'Principles of Commerce', code: '208', syllabus: '/syllabus/aku-eb-commerce.pdf' },
+        name: "Pre-Medical",
+        icon: "⚕️",
+        subjects: [
+          { name: "Physics", syllabus: "https://examinationboard.aku.edu/about-us/SyllabiList/Physics%20HSSC%20I%20Syllabus%202025.pdf" },
+          { name: "Chemistry", syllabus: "https://examinationboard.aku.edu/about-us/SyllabiList/Chemistry%20HSSC%20I%20Syllabus%202025.pdf" },
+          { name: "Biology", syllabus: "https://examinationboard.aku.edu/about-us/SyllabiList/Biology%20HSSC%20I%20Syllabus%202025.pdf" }
         ]
       }
     ]
-  },
-
-  {
-    name: 'IBDP',
-    description: 'International Baccalaureate Diploma Programme',
-    icon: '🌎',
-    totalSubjects: 18,
-    fields: [
-      {
-        name: 'Group 4 - Sciences', icon: '🔬', subjects: [
-          { name: 'Biology', code: 'BIO', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/sciences/' },
-          { name: 'Chemistry', code: 'CHEM', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/sciences/' },
-          { name: 'Physics', code: 'PHYS', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/sciences/' },
-          { name: 'Computer Science', code: 'CS', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/sciences/' },
-        ]
-      },
-      {
-        name: 'Group 3 - Individuals & Societies', icon: '🏛️', subjects: [
-          { name: 'Economics', code: 'ECO', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/individuals-and-societies/economics/' },
-          { name: 'Business Management', code: 'BUS', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/individuals-and-societies/business-management/' },
-        ]
-      },
-      {
-        name: 'Group 5 - Mathematics', icon: '🧮', subjects: [
-          { name: 'Mathematics: Analysis and Approaches', code: 'Math AA', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/mathematics/' },
-          { name: 'Mathematics: Applications and Interpretation', code: 'Math AI', syllabus: 'https://www.ibo.org/programmes/diploma-programme/curriculum/mathematics/' },
-        ]
-      }
-    ]
-  },
+  }
 ];
+
 
 interface ExpandedBoards {
   [key: string]: boolean;

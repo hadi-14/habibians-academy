@@ -22,7 +22,7 @@ export async function createSubject(
 }
 
 export async function getAllSubjects(): Promise<Subject[]> {
-  const q = query(collection(db, SUBJECTS_COLLECTION), orderBy("order", "asc"));
+  const q = query(collection(db, SUBJECTS_COLLECTION), orderBy("year", "asc"));
   const snapshot = await getDocs(q);
   return snapshot.docs.map(
     (docSnap) => ({ uid: docSnap.id, ...docSnap.data() } as Subject)

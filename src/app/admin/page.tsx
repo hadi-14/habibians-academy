@@ -25,6 +25,11 @@ const AdminDashboard: React.FC = () => {
     const [students, setStudents] = useState<Student[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('entries');
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     // Only check login on mount
     useEffect(() => {
@@ -119,7 +124,7 @@ const AdminDashboard: React.FC = () => {
     }, [isVerifying, isLoggedIn]);
 
 
-    const TAB_OPTIONS: NavigationTabOption[] = [
+    const TAB_OPTIONS: NavigationTabOption[] = React.useMemo(() => [
         {
             key: 'entries',
             label: 'Admission Entries',
@@ -160,7 +165,19 @@ const AdminDashboard: React.FC = () => {
             ),
             badge: students.length
         }
-    ];
+    ], [admissionEntries.length, questions.length, teachers.length, classes.length, students.length]);
+
+    useEffect(() => {
+        if (!isClient) return; // Wait for client-side hydration
+
+        const hash = window.location.hash.slice(1);
+        const validTabs = TAB_OPTIONS.map(tab => tab.key);
+
+        if (hash && validTabs.includes(hash)) {
+            setActiveTab(hash);
+        }
+    }, [isClient, TAB_OPTIONS]);
+
 
     const renderTabContent = () => {
         switch (activeTab) {

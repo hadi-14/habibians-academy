@@ -3,12 +3,12 @@ import { Timestamp } from "firebase/firestore";
 export interface Subject {
   uid?: string; // Firestore doc id
   name: string;
-  code: string;
+  code?: string;
   board: string;
   level: string;
-  field: string;
+  year: number;
+  field: string[];
   syllabus: string;
-  icon?: string;
 }
 
 export interface Question {

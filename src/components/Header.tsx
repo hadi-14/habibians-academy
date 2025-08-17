@@ -33,8 +33,8 @@ export default function Header() {
     return (
         <>
             <header className={`w-full sticky top-0 left-0 z-50 py-3 px-4 sm:px-8 font-heading text-xl flex items-center justify-between transition-all duration-300 ${isScrolled
-                    ? 'bg-primary-blue/98 backdrop-blur-lg shadow-xl'
-                    : 'bg-primary-blue/95 backdrop-blur-md shadow-lg'
+                ? 'bg-primary-blue/98 backdrop-blur-lg shadow-xl'
+                : 'bg-primary-blue/95 backdrop-blur-md shadow-lg'
                 }`}>
                 <Link href="/" className="flex items-center gap-2 z-60">
                     <span className="p-1 flex items-center justify-center">
@@ -189,7 +189,7 @@ export default function Header() {
 
             {/* Enhanced WhatsApp Button */}
             <a
-                href="https://wa.me/923002662701?text=Hello%20Habibians%20Academy!%20I%20have%20a%20question."
+                href="https://wa.me/923452178606?text=Hello%20Habibians%20Academy!%20I%20have%20a%20question."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="fixed bottom-6 right-6 z-[100] group flex items-center gap-2 px-4 py-3 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-2xl text-base sm:text-lg font-bold transition-all duration-300 hover:scale-110"

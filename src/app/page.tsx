@@ -63,14 +63,13 @@ export default function Home() {
                 </div>
                 <div className="flex-1 flex items-center justify-center w-full lg:w-auto">
                   <div className="relative w-full max-w-md aspect-video rounded-xl overflow-hidden shadow-lg ring-4 ring-accent-lightblue ring-offset-4 ring-offset-primary-silver transition-all duration-500 hover:scale-105 hover:ring-accent-navy group">
-                    <iframe
+                    <video
                       className="w-full h-full group-hover:shadow-2xl group-hover:brightness-110 transition-all duration-500"
-                      src="https://www.youtube.com/embed/AX5YVfVUHOs"
-                      title="Intro Video"
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
+                      src="./Into.mp4"
+                      controls
+                      playsInline
+                    // poster="/images/intro-video-thumbnail.jpg" // optional preview image
+                    />
                     <span className="absolute inset-0 rounded-xl ring-4 ring-accent-lightblue opacity-40 animate-pulse pointer-events-none"></span>
                   </div>
                 </div>
@@ -421,8 +420,51 @@ function TestimonialsSection() {
       img: '/Faculty/Woman.png',
       text: 'Salutations, I am Farheen Asif and I am at DePaul University, Chicago. Habibians’ Academy was there when I was lost in my academic search and it cleared my confusion beyond any doubt.',
       group: 'Pre-Engineering',
+    },
+    {
+      name: 'Sujal Kotak',
+      img: '/Faculty/Man.png',
+      text: 'Greetings, My name is Sujal Kotak and I am currently a student at Cedar College at Karachi. I would like to express my gratitude to Habibians’ Academy in my journey to this milestone due to their sincere efforts and expert faculty.',
+      group: 'Commerce',
+    },
+    {
+      name: 'Krish Jesrani',
+      img: '/Faculty/Krish Jesrani.jpg',
+      text: 'Greetings, My name is Krish Jesrani and I am currently a student at Greenwich University in Pakistan. I would like to express my gratitude to Habibians’ Academy in my journey to this milestone due to their sincere efforts and expert faculty.',
+      group: 'Commerce',
+    },
+    {
+      name: 'Ameet Raj',
+      img: '/Faculty/Ameet Raj.jpg',
+      text: 'I’m Ameet Raj, now a proud student at Cedar College. When I was overwhelmed and unsure of my academic path, Habibians’ Academy offered not just answers, but unwavering support that led me to where I am today.',
+      group: 'Pre-Medical',
+    },
+    {
+      name: 'Usman',
+      img: '/Faculty/Man.png',
+      text: 'Salutations, I am Usman and I am at Loughborough College. Habibians’ Academy was there when I was lost in my academic search and it cleared my confusion beyond any doubt.',
+      group: 'Pre-Engineering',
+    },
+    {
+      name: 'Vinek Kumar',
+      img: '/Faculty/Man.png',
+      text: 'Greetings, My name is Vinek Kumar and I am currently a student at Cedar College in Pakistan. I would like to express my gratitude to Habibians’ Academy in my journey to this milestone due to their sincere efforts and expert faculty.',
+      group: 'Commerce',
+    },
+    {
+      name: 'Syed Rohaan',
+      img: '/Faculty/Syed Rohaan.jpg',
+      text: 'I am Syed Rohaan, studying at Cedar College. I owe a great part of my academic success to the tireless efforts and expert guidance of the mentors at Habibians’ Academy.',
+      group: 'Pre-Medical',
+    },
+    {
+      name: 'Sonu',
+      img: '/Faculty/Sonu.jpg',
+      text: 'Salutations, I am Sonu and I graduated in BS-SE from DHA Suffa University. Habibians’ Academy was there when I was lost in my academic search and it cleared my confusion beyond any doubt.',
+      group: 'Engineering',
     }
   ];
+
 
   const CARD_COUNT = 3; // Show 3 testimonials at once
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -671,7 +713,7 @@ function ContactAndFAQSection() {
             </form>
             <div className="mt-6 text-primary-blue/80 font-body space-y-2 text-sm">
               <div><span className="font-bold">Email:</span> habibiansacademy@gmail.com</div>
-              <div><span className="font-bold">Phone:</span> +92 300 2662701 </div>
+              <div><span className="font-bold">Phone:</span> +92 345 2178 606 </div>
               <div><span className="font-bold">Address:</span> Suit 402, 4th Floor, Block 10 Gulshan-e-Iqbal, Nipa, Main, Main University Rd, Block 10 Gulshan-e-Iqbal, Karachi, 75300, Pakistan</div>
             </div>
           </div>
