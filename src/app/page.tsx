@@ -68,7 +68,7 @@ export default function Home() {
                       src="./Into.mp4"
                       controls
                       playsInline
-                    // poster="/images/intro-video-thumbnail.jpg" // optional preview image
+                      poster="./intro-video-thumbnail.png" // optional preview image
                     />
                     <span className="absolute inset-0 rounded-xl ring-4 ring-accent-lightblue opacity-40 animate-pulse pointer-events-none"></span>
                   </div>

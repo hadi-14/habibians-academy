@@ -61,12 +61,6 @@ const boards: Board[] = [
           { name: "Computer Science", code: "9618", syllabus: "https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-computer-science-9618/" },
           { name: "Mathematics", code: "9709", syllabus: "https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-mathematics-9709/" },
           { name: "Physics", code: "9702", syllabus: "https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-physics-9702/" },
-        ]
-      },
-      {
-        name: "Pre-Engineering ",
-        icon: "⚙️",
-        subjects: [
           { name: "Chemistry", code: "9701", syllabus: "https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-international-as-and-a-level-chemistry-9701/" },
         ]
       },
