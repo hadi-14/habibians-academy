@@ -34,6 +34,21 @@ function AnimatedCounter({ target, duration = 1200, className = '', suffix = '' 
 }
 
 export default function Home() {
+
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const handlePlay = () => {
+    setIsPlaying(true);
+  };
+
+  const handlePause = () => {
+    setIsPlaying(false);
+  };
+
+  const handleEnded = () => {
+    setIsPlaying(false);
+  };
+
   return (
     <div className="grid grid-rows-[auto_1fr_auto] items-center justify-items-center min-h-screen font-body overflow-x-hidden">
       <main className="flex flex-col items-center sm:items-start w-full">
@@ -61,16 +76,19 @@ export default function Home() {
                     View Courses
                   </a>
                 </div>
-                <div className="flex-1 flex items-center justify-center w-full lg:w-auto">
-                  <div className="relative w-full max-w-md aspect-video rounded-xl overflow-hidden shadow-lg ring-4 ring-accent-lightblue ring-offset-4 ring-offset-primary-silver transition-all duration-500 hover:scale-105 hover:ring-accent-navy group">
+                <div className={`flex-1 flex items-center justify-center w-full lg:w-auto ${!isPlaying ? 'animate-pulse' : ''}`}>
+                  <div className="relative w-full max-w-md aspect-video rounded-xl overflow-hidden shadow-lg ring-4 ring-accent-lightblue ring-offset-4 ring-offset-gray-200 transition-all duration-500 hover:scale-105 hover:ring-blue-800 group">
                     <video
                       className="w-full h-full group-hover:shadow-2xl group-hover:brightness-110 transition-all duration-500"
-                      src="./Into.mp4"
+                      src="./Intro.mp4"
                       controls
                       playsInline
-                      poster="./intro-video-thumbnail.png" // optional preview image
+                      poster="./intro-video-thumbnail.png"
+                      onPlay={handlePlay}
+                      onPause={handlePause}
+                      onEnded={handleEnded}
                     />
-                    <span className="absolute inset-0 rounded-xl ring-4 ring-accent-lightblue opacity-40 animate-pulse pointer-events-none"></span>
+                    <span className={`absolute inset-0 rounded-xl ring-4 ring-accent-lightblue opacity-40 pointer-events-none ${!isPlaying ? 'animate-pulse' : ''}`}></span>
                   </div>
                 </div>
               </section>
