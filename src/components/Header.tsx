@@ -55,6 +55,13 @@ export default function Header() {
                         <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent-lightblue transition-all duration-200 group-hover:w-full"></span>
                     </Link>
                     <Link
+                        href="/faculty"
+                        className="font-semibold text-primary-white hover:text-accent-lightblue transition-colors duration-200 relative group"
+                    >
+                        Faculty
+                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent-lightblue transition-all duration-200 group-hover:w-full"></span>
+                    </Link>
+                    <Link
                         href="/student-portal/login"
                         className="font-semibold text-primary-white hover:text-accent-lightblue transition-colors duration-200 relative group"
                     >
@@ -135,15 +142,27 @@ export default function Header() {
 
                         {/* Mobile Menu Items */}
                         <Link
-                            href="#groups"
+                            href="#courses"
                             className="group flex items-center gap-3 font-semibold text-white hover:text-accent-lightblue transition-all duration-200 text-lg py-2 px-3 rounded-lg hover:bg-white/10"
                             onClick={closeMenu}
                         >
                             <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0v6m0-6l-9-5m9 5l9-5" />
                             </svg>
-                            Routes
+                            Courses
                         </Link>
+
+                        <Link
+                            href="#faculty"
+                            className="group flex items-center gap-3 font-semibold text-white hover:text-accent-lightblue transition-all duration-200 text-lg py-2 px-3 rounded-lg hover:bg-white/10"
+                            onClick={closeMenu}
+                        >
+                            <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A9 9 0 1119 12v1a4 4 0 11-8 0v-1a9 9 0 01-5.879 5.804z" />
+                            </svg>
+                            Faculty
+                        </Link>
+
                         <Link
                             href="/student-portal/login"
                             className="group flex items-center gap-3 font-semibold text-white hover:text-accent-lightblue transition-all duration-200 text-lg py-2 px-3 rounded-lg hover:bg-white/10"

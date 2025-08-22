@@ -292,21 +292,103 @@ export default function Home() {
   );
 }
 
+// Real faculty data from faculty/page.tsx
+const facultyMembers = [
+  {
+    name: "Abdul Wasiq",
+    subject: "Physics",
+    role: "Lecturer",
+    board: "Alevels & IB",
+    img: "/Faculty/Teachers/Abdul Wasiq.png",
+  },
+  {
+    name: "Adil Amir",
+    subject: "Chemistry",
+    role: "Lecturer",
+    board: "Alevels & IB",
+    img: "/Faculty/Teachers/Adil Amir.png",
+  },
+  {
+    name: "Shahid Ansari",
+    subject: "Islamiyat",
+    role: "Lecturer",
+    board: "Alevels & IB",
+    img: "/Faculty/Teachers/Shahid Ansari.png",
+  },
+  {
+    name: "Ghazanfar Sultan",
+    subject: "Chemistry & Biology",
+    role: "Lecturer",
+    board: "Alevels & IB",
+    img: "/Faculty/Teachers/Ghazanfar Sultan.png",
+  },
+  {
+    name: "Shahbaz Ali",
+    subject: "Accounting",
+    role: "Lecturer",
+    board: "Alevels & IB",
+    img: "/Faculty/Teachers/Shahbaz Ali.png",
+  },
+  {
+    name: "Faysal Aleemi",
+    subject: "Islamiyat",
+    role: "Lecturer",
+    board: "Alevels & IB",
+    img: "/Faculty/Teachers/Faysal Aleemi.png",
+  },
+  {
+    name: "Daniyal Ilyas",
+    subject: "Economics & Business",
+    role: "Lecturer",
+    board: "Alevels & IB",
+    img: "/Faculty/Teachers/Daniyal Ilyas.png",
+  },
+  {
+    name: "Faiq",
+    subject: "English",
+    role: "Lecturer",
+    board: "Alevels & IB",
+    img: "/Faculty/Teachers/Faiq.png",
+  },
+  {
+    name: "Humaira Shamim",
+    subject: "Urdu",
+    role: "Lecturer",
+    board: "Alevels & IB",
+    img: "/Faculty/Teachers/Humaira Shamim.png",
+  },
+  {
+    name: "Ali Ammar",
+    subject: "Pakistan Studies",
+    role: "Lecturer",
+    board: "Alevels & IB",
+    img: "/Faculty/Teachers/Ali Ammar.png",
+  },
+  {
+    name: "Shehroz Ilyas",
+    subject: "Computer Science",
+    role: "Lecturer",
+    board: "Alevels & IB",
+    img: "/Faculty/Teachers/Shehroz Ilyas.png",
+  },
+  {
+    name: "Hannan Abdul Khaliq",
+    subject: "Biology",
+    role: "Lecturer",
+    board: "Alevels & IB",
+    img: "/Faculty/Teachers/Hannan Abdul Khaliq.png",
+  },
+  {
+    name: "Faraz Aftab",
+    subject: "Sociology",
+    role: "Lecturer",
+    board: "Alevels & IB",
+    img: "/Faculty/Teachers/Faraz Aftab.png",
+  },
+];
+
 function FacultyCarousel() {
-  const faculty = [
-    { name: 'Revealing Soon!', subject: 'English', role: 'Senior Lecturer', img: '/Faculty/Man.png' },
-    { name: 'Revealing Soon!', subject: 'Urdu', role: 'Lecturer', img: '/Faculty/Woman.png' },
-    { name: 'Revealing Soon!', subject: 'Islamiat', role: 'Lecturer', img: '/Faculty/Man.png' },
-    { name: 'Revealing Soon!', subject: 'Pakistan Studies', role: 'Lecturer', img: '/Faculty/Woman.png' },
-    { name: 'Revealing Soon!', subject: 'Physics', role: 'Head of Science', img: '/Faculty/Man.png' },
-    { name: 'Revealing Soon!', subject: 'Biology', role: 'Lecturer', img: '/Faculty/Woman.png' },
-    { name: 'Revealing Soon!', subject: 'Chemistry', role: 'Lecturer', img: '/Faculty/Man.png' },
-    { name: 'Revealing Soon!', subject: 'Computer Science', role: 'Lecturer', img: '/Faculty/Woman.png' },
-    { name: 'Revealing Soon!', subject: 'Maths', role: 'Lecturer', img: '/Faculty/Man.png' },
-    { name: 'Revealing Soon!', subject: 'Business Maths', role: 'Lecturer', img: '/Faculty/Woman.png' },
-    { name: 'Revealing Soon!', subject: 'Accounts', role: 'Lecturer', img: '/Faculty/Man.png' },
-    { name: 'Revealing Soon!', subject: 'Economics', role: 'Lecturer', img: '/Faculty/Woman.png' },
-  ];
+  const faculty = facultyMembers;
 
   const CARD_COUNT = 5;
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -407,6 +489,9 @@ function FacultyCarousel() {
                     <h3 className={`${isCenter ? 'text-xl' : 'text-lg'} font-bold text-gray-800`}>{card.name}</h3>
                     <p className={`${isCenter ? 'text-lg' : 'text-base'} font-medium text-blue-600`}>{card.subject}</p>
                     <p className={`${isCenter ? 'text-base' : 'text-sm'} text-gray-600`}>{card.role}</p>
+                    {card.board && (
+                      <p className={`${isCenter ? 'text-base' : 'text-sm'} text-blue-800 font-semibold`}>{card.board}</p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -423,7 +508,7 @@ function TestimonialsSection() {
   const testimonials = [
     {
       name: 'Sumit Ahuja',
-      img: '/Faculty/sumit.jpg',
+      img: '/Faculty/Reviews/sumit.jpg',
       text: 'I’m Sumit Ahuja, now a proud student at DePaul University, Chicago. When I was overwhelmed and unsure of my academic path, Habibians’ Academy offered not just answers, but unwavering support that led me to where I am today.',
       group: 'Commerce',
     },
@@ -447,13 +532,13 @@ function TestimonialsSection() {
     },
     {
       name: 'Krish Jesrani',
-      img: '/Faculty/Krish Jesrani.jpg',
+      img: '/Faculty/Reviews/Krish Jesrani.jpg',
       text: 'Greetings, My name is Krish Jesrani and I am currently a student at Greenwich University in Pakistan. I would like to express my gratitude to Habibians’ Academy in my journey to this milestone due to their sincere efforts and expert faculty.',
       group: 'Commerce',
     },
     {
       name: 'Ameet Raj',
-      img: '/Faculty/Ameet Raj.jpg',
+      img: '/Faculty/Reviews/Ameet Raj.jpg',
       text: 'I’m Ameet Raj, now a proud student at Cedar College. When I was overwhelmed and unsure of my academic path, Habibians’ Academy offered not just answers, but unwavering support that led me to where I am today.',
       group: 'Pre-Medical',
     },
@@ -471,13 +556,13 @@ function TestimonialsSection() {
     },
     {
       name: 'Syed Rohaan',
-      img: '/Faculty/Syed Rohaan.jpg',
+      img: '/Faculty/Reviews/Syed Rohaan.jpg',
       text: 'I am Syed Rohaan, studying at Cedar College. I owe a great part of my academic success to the tireless efforts and expert guidance of the mentors at Habibians’ Academy.',
       group: 'Pre-Medical',
     },
     {
       name: 'Sonu',
-      img: '/Faculty/Sonu.jpg',
+      img: '/Faculty/Reviews/Sonu.jpg',
       text: 'Salutations, I am Sonu and I graduated in BS-SE from DHA Suffa University. Habibians’ Academy was there when I was lost in my academic search and it cleared my confusion beyond any doubt.',
       group: 'Engineering',
     }
